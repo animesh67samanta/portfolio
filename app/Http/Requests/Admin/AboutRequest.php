@@ -8,7 +8,7 @@ class AboutRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('accessAdmin') ?? false;
     }
 
     /**
@@ -19,6 +19,11 @@ class AboutRequest extends FormRequest
         $photoRule = $this->isMethod('post') ? 'required' : 'nullable';
 
         return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'mobile' => ['nullable', 'string', 'max:255'],
+            'current_address' => ['nullable', 'string'],
+            'permanent_address' => ['nullable', 'string'],
             'heading' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'photo_path' => [$photoRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],

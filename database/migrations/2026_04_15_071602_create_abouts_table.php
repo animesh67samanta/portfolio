@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('abouts', function (Blueprint $table) {
             $table->id();
             $table->string('heading');
-            $table->longText('content');
+            $table->longText('content')->nullable();
             $table->string('photo_path')->nullable();
             $table->string('resume_url')->nullable();
             $table->string('status', 20)->default('draft')->index();

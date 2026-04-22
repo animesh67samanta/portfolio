@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-import FormField from '@/Components/FormField.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import SectionCard from '@/Components/SectionCard.vue';
+import Modal from '@/Components/Modal.vue';
+import BannerFormFields from '@/Components/Admin/Forms/BannerFormFields.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { 
+    PlusIcon, 
+    PencilIcon, 
+    TrashIcon, 
+    XMarkIcon,
+    PhotoIcon
+} from '@heroicons/vue/24/outline';
 
 type Banner = {
     id: number;
@@ -27,71 +35,105 @@ const props = defineProps<{
 }>();
 
 const statusOptions = [
-    { value: 'draft', label: 'Draft' },
-    { value: 'published', label: 'Published' },
-    { value: 'archived', label: 'Archived' },
+    { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-800', icon: '📝' },
+    { value: 'published', label: 'Published', color: 'bg-green-100 text-green-800', icon: '✓' },
+    { value: 'archived', label: 'Archived', color: 'bg-yellow-100 text-yellow-800', icon: '📦' },
 ] as const;
 
-const createForm = useForm<{
-    title: string;
-    subtitle: string;
-    image_path: File | null;
-    cta_text: string;
-    cta_url: string;
-    status: 'draft' | 'published' | 'archived';
-    sort_order: number;
-    published_at: string;
-}>({
+// Create Modal
+const isCreateOpen = ref(false);
+const createForm = useForm({
     title: '',
     subtitle: '',
-    image_path: null,
+    image_path: null as File | string| null,
     cta_text: '',
     cta_url: '',
-    status: 'draft',
+    status: 'draft' as 'draft' | 'published' | 'archived',
     sort_order: 0,
     published_at: '',
 });
 
+// Edit Modal
 const isEditOpen = ref(false);
 const editing = ref<Banner | null>(null);
-
-const editForm = useForm<{
-    title: string;
-    subtitle: string;
-    image_path: File | null;
-    cta_text: string;
-    cta_url: string;
-    status: 'draft' | 'published' | 'archived';
-    sort_order: number;
-    published_at: string;
-}>({
+const editForm = useForm({
     title: '',
     subtitle: '',
-    image_path: null,
+    image_path: null as File | string | null,
     cta_text: '',
     cta_url: '',
-    status: 'draft',
+    status: 'draft' as 'draft' | 'published' | 'archived',
     sort_order: 0,
     published_at: '',
 });
 
+// Delete Modal
+const isDeleteOpen = ref(false);
+const deleting = ref<Banner | null>(null);
+
+// Notification
+const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
+    show: false,
+    type: 'success',
+    message: ''
+});
+
+const showNotification = (type: 'success' | 'error', message: string) => {
+    notification.value = { show: true, type, message };
+    setTimeout(() => {
+        notification.value.show = false;
+    }, 3000);
+};
+
+// Open create modal
+const openCreate = () => {
+    createForm.reset();
+    createForm.clearErrors();
+    isCreateOpen.value = true;
+};
+
+// Close create modal
+const closeCreate = () => {
+    isCreateOpen.value = false;
+    createForm.reset();
+    createForm.clearErrors();
+};
+
+// Submit create
+const submitCreate = () => {
+    // Clean image_path before submit if string (existing) - shouldn't happen on create
+    if (typeof createForm.image_path === 'string') {
+        delete createForm.image_path;
+    }
+    createForm.post(route('admin.banners.store'), {
+        forceFormData: true,
+        onSuccess: () => {
+            closeCreate();
+            showNotification('success', 'Banner created successfully!');
+        },
+        onError: (errors) => {
+            console.error('Create errors:', errors);
+            showNotification('error', 'Failed to create banner. Please check the form.');
+        }
+    });
+};
+
+// Open edit modal
 const openEdit = (banner: Banner) => {
     editing.value = banner;
+    editForm.title = banner.title;
+    editForm.subtitle = banner.subtitle ?? '';
+    editForm.image_path = banner.image_path;
+    editForm.cta_text = banner.cta_text ?? '';
+    editForm.cta_url = banner.cta_url ?? '';
+    editForm.status = banner.status;
+    editForm.sort_order = banner.sort_order;
+    editForm.published_at = banner.published_at ? banner.published_at.slice(0, 16) : '';
     editForm.clearErrors();
-    editForm.defaults({
-        title: banner.title,
-        subtitle: banner.subtitle ?? '',
-        image_path: null,
-        cta_text: banner.cta_text ?? '',
-        cta_url: banner.cta_url ?? '',
-        status: banner.status,
-        sort_order: banner.sort_order ?? 0,
-        published_at: banner.published_at ? banner.published_at.slice(0, 16) : '',
-    });
-    editForm.reset();
     isEditOpen.value = true;
 };
 
+// Close edit modal
 const closeEdit = () => {
     isEditOpen.value = false;
     editing.value = null;
@@ -99,345 +141,364 @@ const closeEdit = () => {
     editForm.clearErrors();
 };
 
-const storageUrl = (path: string) => `/${path}`;
-
-const createIsDisabled = computed(() => createForm.processing);
-const editIsDisabled = computed(() => editForm.processing || !editing.value);
-
-const submitCreate = () => {
-    createForm.post(route('admin.banners.store'), {
-        forceFormData: true,
-        onSuccess: () => {
-            createForm.reset();
-            createForm.clearErrors();
-        },
-    });
-};
-
+// Submit update
 const submitUpdate = () => {
-    if (!editing.value) {
-        return;
-    }
+    if (!editing.value) return;
 
-    editForm.post(route('admin.banners.update', editing.value.id), {
+    // Clean image_path before submit if string (existing)
+    if (typeof editForm.image_path === 'string') {
+        delete editForm.image_path;
+    }
+    editForm.put(route('admin.banners.update', editing.value.id), {
         method: 'patch',
         forceFormData: true,
         onSuccess: () => {
             closeEdit();
+            showNotification('success', 'Banner updated successfully!');
         },
+        onError: (errors) => {
+            console.error('Update errors:', errors);
+            showNotification('error', 'Failed to update banner.');
+        }
     });
 };
 
-const destroyBanner = (banner: Banner) => {
-    if (!confirm(`Delete banner "${banner.title}"?`)) {
-        return;
-    }
+// Open delete modal
+const openDelete = (banner: Banner) => {
+    deleting.value = banner;
+    isDeleteOpen.value = true;
+};
 
-    const form = useForm({});
-    form.delete(route('admin.banners.destroy', banner.id));
+// Confirm delete
+const confirmDelete = () => {
+    if (!deleting.value) return;
+
+    router.delete(route('admin.banners.destroy', deleting.value.id), {
+        onSuccess: () => {
+            isDeleteOpen.value = false;
+            deleting.value = null;
+            showNotification('success', 'Banner deleted successfully!');
+        },
+        onError: (errors) => {
+            console.error('Delete errors:', errors);
+            showNotification('error', 'Failed to delete banner.');
+        }
+    });
+};
+
+// Cancel delete
+const cancelDelete = () => {
+    isDeleteOpen.value = false;
+    deleting.value = null;
+};
+
+// Get image URL
+const getImageUrl = (path: string) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    if (path.startsWith('/storage')) return path;
+    return `/${path.replace(/^\/?storage\/?/, '')}`;
+};
+
+// Get status info
+const getStatusInfo = (status: string) => {
+    const option = statusOptions.find(opt => opt.value === status);
+    return {
+        color: option?.color || 'bg-gray-100 text-gray-800',
+        icon: option?.icon || '📄'
+    };
 };
 </script>
 
 <template>
     <Head title="Banners" />
 
-    <AdminLayout page-title="Banner">
-        <div class="space-y-6">
-            <SectionCard>
-                <h2 class="text-xl font-semibold text-slate-900">Create Banner</h2>
-                <p class="mt-1 text-sm text-slate-600">Upload an image and publish when ready.</p>
-
-                <form class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="submitCreate">
-                    <FormField label="Title" name="title" :error="createForm.errors.title">
-                        <input
-                            id="title"
-                            v-model="createForm.title"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="text"
-                            autocomplete="off"
-                        />
-                    </FormField>
-
-                    <FormField label="Subtitle" name="subtitle" :error="createForm.errors.subtitle">
-                        <input
-                            id="subtitle"
-                            v-model="createForm.subtitle"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="text"
-                            autocomplete="off"
-                        />
-                    </FormField>
-
-                    <FormField
-                        label="Image"
-                        name="image_path"
-                        :error="createForm.errors.image_path"
-                        help="PNG/JPG/WebP up to 2MB."
-                    >
-                        <input
-                            id="image_path"
-                            class="block w-full rounded-md border-slate-300 bg-white text-sm shadow-sm file:mr-4 file:rounded-md file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-slate-800"
-                            type="file"
-                            accept="image/*"
-                            @change="createForm.image_path = ($event.target as HTMLInputElement).files?.[0] ?? null"
-                        />
-                    </FormField>
-
-                    <FormField label="Status" name="status" :error="createForm.errors.status">
-                        <select
-                            id="status"
-                            v-model="createForm.status"
-                            class="block w-full rounded-md border-slate-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        >
-                            <option v-for="o in statusOptions" :key="o.value" :value="o.value">
-                                {{ o.label }}
-                            </option>
-                        </select>
-                    </FormField>
-
-                    <FormField label="CTA Text" name="cta_text" :error="createForm.errors.cta_text">
-                        <input
-                            id="cta_text"
-                            v-model="createForm.cta_text"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="text"
-                            autocomplete="off"
-                        />
-                    </FormField>
-
-                    <FormField label="CTA URL" name="cta_url" :error="createForm.errors.cta_url">
-                        <input
-                            id="cta_url"
-                            v-model="createForm.cta_url"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="url"
-                            placeholder="https://example.com"
-                            autocomplete="off"
-                        />
-                    </FormField>
-
-                    <FormField label="Sort order" name="sort_order" :error="createForm.errors.sort_order">
-                        <input
-                            id="sort_order"
-                            v-model.number="createForm.sort_order"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="number"
-                            min="0"
-                        />
-                    </FormField>
-
-                    <FormField
-                        label="Published at"
-                        name="published_at"
-                        :error="createForm.errors.published_at"
-                        help="Optional. Useful for scheduling."
-                    >
-                        <input
-                            id="published_at"
-                            v-model="createForm.published_at"
-                            class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            type="datetime-local"
-                        />
-                    </FormField>
-
-                    <div class="md:col-span-2 flex items-center justify-end">
-                        <LoadingButton :loading="createForm.processing" :disabled="createIsDisabled">
-                            Create
-                        </LoadingButton>
-                    </div>
-                </form>
-            </SectionCard>
-
-            <SectionCard>
-                <div class="flex items-center justify-between gap-4">
-                    <h2 class="text-xl font-semibold text-slate-900">Banners</h2>
-                    <p class="text-sm text-slate-600">{{ props.banners.data.length }} items</p>
-                </div>
-
-                <div class="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white">
-                    <table class="min-w-full divide-y divide-slate-200 text-sm">
-                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                            <tr>
-                                <th class="px-4 py-3">Image</th>
-                                <th class="px-4 py-3">Title</th>
-                                <th class="px-4 py-3">Status</th>
-                                <th class="px-4 py-3">Order</th>
-                                <th class="px-4 py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200">
-                            <tr v-for="b in props.banners.data" :key="b.id" class="hover:bg-slate-50">
-                                <td class="px-4 py-3">
-                                    <img
-                                        :src="storageUrl(b.image_path)"
-                                        :alt="b.title"
-                                        class="h-10 w-16 rounded object-cover ring-1 ring-slate-200"
-                                        loading="lazy"
-                                    />
-                                </td>
-                                <td class="px-4 py-3">
-                                    <p class="font-medium text-slate-900">{{ b.title }}</p>
-                                    <p v-if="b.subtitle" class="mt-0.5 text-xs text-slate-500">{{ b.subtitle }}</p>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <span
-                                        class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium"
-                                        :class="
-                                            b.status === 'published'
-                                                ? 'bg-emerald-50 text-emerald-700'
-                                                : b.status === 'archived'
-                                                  ? 'bg-slate-100 text-slate-700'
-                                                  : 'bg-amber-50 text-amber-700'
-                                        "
-                                    >
-                                        {{ b.status }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 text-slate-700">{{ b.sort_order }}</td>
-                                <td class="px-4 py-3 text-right">
-                                    <button
-                                        type="button"
-                                        class="rounded-md px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
-                                        @click="openEdit(b)"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="rounded-md px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-50"
-                                        @click="destroyBanner(b)"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr v-if="props.banners.data.length === 0">
-                                <td colspan="5" class="px-4 py-8 text-center text-slate-600">No banners yet.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </SectionCard>
-        </div>
-
-        <div v-if="isEditOpen" class="fixed inset-0 z-50">
-            <div class="absolute inset-0 bg-slate-900/50" @click="closeEdit" />
-            <div class="absolute inset-x-0 top-10 mx-auto w-full max-w-2xl px-4">
-                <div class="rounded-xl bg-white p-6 shadow-xl">
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-semibold text-slate-900">Edit Banner</h3>
-                            <p class="mt-1 text-sm text-slate-600">Update fields and save changes.</p>
-                        </div>
-                        <button
-                            type="button"
-                            class="rounded-md p-2 text-slate-600 hover:bg-slate-100"
-                            @click="closeEdit"
-                        >
-                            <span class="sr-only">Close</span>
-                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <form class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="submitUpdate">
-                        <FormField label="Title" name="edit_title" :error="editForm.errors.title">
-                            <input
-                                id="edit_title"
-                                v-model="editForm.title"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="text"
-                            />
-                        </FormField>
-
-                        <FormField label="Subtitle" name="edit_subtitle" :error="editForm.errors.subtitle">
-                            <input
-                                id="edit_subtitle"
-                                v-model="editForm.subtitle"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="text"
-                            />
-                        </FormField>
-
-                        <FormField label="Replace image" name="edit_image_path" :error="editForm.errors.image_path">
-                            <input
-                                id="edit_image_path"
-                                class="block w-full rounded-md border-slate-300 bg-white text-sm shadow-sm file:mr-4 file:rounded-md file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-slate-800"
-                                type="file"
-                                accept="image/*"
-                                @change="editForm.image_path = ($event.target as HTMLInputElement).files?.[0] ?? null"
-                            />
-                        </FormField>
-
-                        <FormField label="Status" name="edit_status" :error="editForm.errors.status">
-                            <select
-                                id="edit_status"
-                                v-model="editForm.status"
-                                class="block w-full rounded-md border-slate-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            >
-                                <option v-for="o in statusOptions" :key="o.value" :value="o.value">
-                                    {{ o.label }}
-                                </option>
-                            </select>
-                        </FormField>
-
-                        <FormField label="CTA Text" name="edit_cta_text" :error="editForm.errors.cta_text">
-                            <input
-                                id="edit_cta_text"
-                                v-model="editForm.cta_text"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="text"
-                            />
-                        </FormField>
-
-                        <FormField label="CTA URL" name="edit_cta_url" :error="editForm.errors.cta_url">
-                            <input
-                                id="edit_cta_url"
-                                v-model="editForm.cta_url"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="url"
-                            />
-                        </FormField>
-
-                        <FormField label="Sort order" name="edit_sort_order" :error="editForm.errors.sort_order">
-                            <input
-                                id="edit_sort_order"
-                                v-model.number="editForm.sort_order"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="number"
-                                min="0"
-                            />
-                        </FormField>
-
-                        <FormField label="Published at" name="edit_published_at" :error="editForm.errors.published_at">
-                            <input
-                                id="edit_published_at"
-                                v-model="editForm.published_at"
-                                class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                type="datetime-local"
-                            />
-                        </FormField>
-
-                        <div class="md:col-span-2 flex items-center justify-end gap-2">
-                            <button
-                                type="button"
-                                class="rounded-md px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                                @click="closeEdit"
-                            >
-                                Cancel
-                            </button>
-                            <LoadingButton :loading="editForm.processing" :disabled="editIsDisabled">
-                                Save changes
-                            </LoadingButton>
-                        </div>
-                    </form>
+    <AdminLayout page-title="Banners">
+        <!-- Notification Toast -->
+        <Transition
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 translate-x-full"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 translate-x-full"
+        >
+            <div
+                v-if="notification.show"
+                :class="[
+                    'fixed top-20 right-4 z-50 rounded-lg p-4 shadow-lg',
+                    notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+                ]"
+            >
+                <div class="flex items-center gap-3">
+                    <div class="flex-1">{{ notification.message }}</div>
+                    <button @click="notification.show = false" class="text-gray-400 hover:text-gray-600">
+                        <XMarkIcon class="h-5 w-5" />
+                    </button>
                 </div>
             </div>
+        </Transition>
+
+        <div class="space-y-6">
+            <!-- Header with Create Button -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Banners</h2>
+                    <p class="mt-1 text-sm text-gray-500">Manage your promotional banners</p>
+                </div>
+                <button
+                    @click="openCreate"
+                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-600 hover:shadow-lg active:scale-95"
+                >
+                    <PlusIcon class="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+                    <span>Create Banner</span>
+                </button>
+            </div>
+
+            <!-- Banners Grid -->
+            <SectionCard>
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div
+                        v-for="banner in props.banners.data"
+                        :key="banner.id"
+                        class="group rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+                    >
+                        <!-- Banner Image -->
+                        <div class="relative overflow-hidden rounded-t-xl">
+                            <img 
+                                :src="getImageUrl(banner.image_path)"
+                                :alt="banner.title"
+                                class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                @error="(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x200?text=No+Image' }"
+                            />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                            <div class="absolute top-3 right-3 flex gap-2">
+                                <button
+                                    @click="openEdit(banner)"
+                                    class="rounded-lg bg-white/90 p-2 text-indigo-600 backdrop-blur-sm transition-all hover:bg-indigo-600 hover:text-white"
+                                    title="Edit"
+                                >
+                                    <PencilIcon class="h-4 w-4" />
+                                </button>
+                                <button
+                                    @click="openDelete(banner)"
+                                    class="rounded-lg bg-white/90 p-2 text-red-600 backdrop-blur-sm transition-all hover:bg-red-600 hover:text-white"
+                                    title="Delete"
+                                >
+                                    <TrashIcon class="h-4 w-4" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Banner Content -->
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span :class="['inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold', getStatusInfo(banner.status).color]">
+                                    <span>{{ getStatusInfo(banner.status).icon }}</span>
+                                    <span>{{ banner.status }}</span>
+                                </span>
+                                <span class="text-xs text-gray-500">Order: {{ banner.sort_order }}</span>
+                            </div>
+                            
+                            <h3 class="mb-1 text-lg font-semibold text-gray-900 line-clamp-1">
+                                {{ banner.title }}
+                            </h3>
+                            
+                            <p v-if="banner.subtitle" class="mb-3 text-sm text-gray-600 line-clamp-2">
+                                {{ banner.subtitle }}
+                            </p>
+                            
+                            <div v-if="banner.cta_text" class="mt-3">
+                                <a 
+                                    :href="banner.cta_url || '#'" 
+                                    target="_blank"
+                                    class="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                                >
+                                    {{ banner.cta_text }}
+                                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-if="props.banners.data.length === 0" class="col-span-full">
+                        <div class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+                            <PhotoIcon class="h-16 w-16 text-gray-400" />
+                            <h3 class="mt-4 text-lg font-semibold text-gray-900">No banners yet</h3>
+                            <p class="mt-2 text-sm text-gray-500">Get started by creating your first banner</p>
+                            <button
+                                @click="openCreate"
+                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                            >
+                                <PlusIcon class="h-4 w-4" />
+                                Create Banner
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </SectionCard>
         </div>
+
+        <!-- Create Modal -->
+        <Modal :show="isCreateOpen" max-width="4xl" @close="closeCreate">
+            <div class="p-6">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Create New Banner</h3>
+                        <p class="mt-1 text-sm text-gray-500">Add a new promotional banner</p>
+                    </div>
+                    <button @click="closeCreate" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                        <XMarkIcon class="h-5 w-5" />
+                    </button>
+                </div>
+
+                <form class="mt-6" @submit.prevent="submitCreate">
+                    <BannerFormFields 
+                        :form="createForm" 
+                        :status-options="statusOptions" 
+                        prefix="create"
+                    />
+                    
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button
+                            type="button"
+                            @click="closeCreate"
+                            class="group inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            
+                        >
+                            <svg class="h-4 w-4 text-gray-500 transition-all duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span>Cancel</span>
+                        </button>
+                        <LoadingButton 
+                            :loading="createForm.processing" 
+                            :disabled="createForm.processing"
+                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
+                        >
+                            <span class="flex items-center">
+                                <PlusIcon class="mr-2 h-5 w-5 transition-all duration-300 group-hover:rotate-90 group-hover:scale-110" />
+                                <span class="relative">
+                                    Create Banner
+                                    <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
+                                </span>
+                            </span>
+                        </LoadingButton>
+                            
+                    </div>
+                </form>
+            </div>
+        </Modal>
+
+        <!-- Edit Modal -->
+        <Modal :show="isEditOpen" max-width="4xl" @close="closeEdit">
+            <div class="p-6">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Edit Banner</h3>
+                        <p class="mt-1 text-sm text-gray-500">Update banner details</p>
+                    </div>
+                    <button @click="closeEdit" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                        <XMarkIcon class="h-5 w-5" />
+                    </button>
+                </div>
+
+                <form class="mt-6" @submit.prevent="submitUpdate">
+                    <BannerFormFields 
+                        :form="editForm" 
+                        :status-options="statusOptions" 
+                        prefix="edit"
+                        :current-image-url="editing?.image_path ? getImageUrl(editing.image_path) : undefined"
+                    />
+                    
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button
+                            type="button"
+                            @click="closeCreate"
+                            class="group inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <svg class="h-4 w-4 text-gray-500 transition-all duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            <span>Cancel</span>
+                        </button>
+                        
+                        <LoadingButton 
+                            :loading="editForm.processing" 
+                            :disabled="editForm.processing"
+                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
+                        >
+                            <span class="flex items-center">
+                                <PlusIcon class="mr-2 h-5 w-5 transition-all duration-300 group-hover:rotate-90 group-hover:scale-110" />
+                                <span class="relative">
+                                    Update Banner
+                                    <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
+                                </span>
+                            </span>
+                        </LoadingButton>
+                        
+                    </div>
+                </form>
+            </div>
+        </Modal>
+
+        <!-- Delete Confirmation Modal -->
+        <Modal :show="isDeleteOpen" max-width="md" @close="cancelDelete">
+            <div class="p-6">
+                <div class="flex items-center justify-center">
+                    <div class="rounded-full bg-red-100 p-3">
+                        <TrashIcon class="h-6 w-6 text-red-600" />
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <h3 class="text-lg font-semibold text-gray-900">Delete Banner</h3>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Are you sure you want to delete "<span class="font-semibold">{{ deleting?.title }}</span>"?
+                        This action cannot be undone.
+                    </p>
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button
+                        type="button"
+                        @click="cancelDelete"
+                        class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        @click="confirmDelete"
+                        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                    >
+                        Delete Banner
+                    </button>
+                </div>
+            </div>
+        </Modal>
     </AdminLayout>
 </template>
+
+<style scoped>
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.group {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>

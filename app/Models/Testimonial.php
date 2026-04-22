@@ -26,6 +26,6 @@ class Testimonial extends Model
      */
     public function scopePublished($query): Builder
     {
-        return $query->where('status', 'published');
+        return $query->where('status', 'active');
     }
 }

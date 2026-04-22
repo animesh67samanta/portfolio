@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
-            $table->longText('content');
+            $table->longText('content')->nullable();
             $table->string('featured_image')->nullable();
             $table->string('cover_image')->nullable();
             $table->string('status', 20)->default('draft')->index();

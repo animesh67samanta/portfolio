@@ -43,9 +43,12 @@ class ProjectService
      */
     public function update(Project $project, array $data): Project
     {
-        if (isset($data['thumbnail_path'])) {
+        if (array_key_exists('thumbnail_path', $data) && $data['thumbnail_path'] instanceof \Illuminate\Http\UploadedFile) {
             $this->imageService->deleteImage($project->thumbnail_path);
             $data['thumbnail_path'] = $this->imageService->storeImage($data['thumbnail_path'], 'projects');
+        } elseif (array_key_exists('thumbnail_path', $data) && is_null($data['thumbnail_path'])) {
+            // $this->imageService->deleteImage($project->thumbnail_path);
+            unset($data['thumbnail_path']);
         } else {
             unset($data['thumbnail_path']);
         }

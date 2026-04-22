@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->index();
             $table->string('phone')->nullable();
             $table->string('subject')->nullable();
-            $table->longText('message');
+            $table->longText('message')->nullable();
             $table->boolean('is_read')->default(false)->index();
             $table->timestamp('responded_at')->nullable();
             $table->string('status', 20)->default('new')->index();

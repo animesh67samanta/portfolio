@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('subtitle')->nullable();
-            $table->string('image_path');
+            $table->string('image_path')->nullable();
             $table->string('cta_text')->nullable();
             $table->string('cta_url')->nullable();
             $table->string('status', 20)->default('draft')->index();

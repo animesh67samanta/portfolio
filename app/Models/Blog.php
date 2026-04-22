@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
     'cover_image',
     'status',
     'published_at',
+    'views_count',
 ])]
 class Blog extends Model
 {

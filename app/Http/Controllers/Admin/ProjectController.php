@@ -35,13 +35,30 @@ class ProjectController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Project $project, ProjectService $projectService): Response
+    {
+        $data = $projectService->list(perPage: 1);
+
+        return Inertia::render('Admin/Projects/Edit', [
+            'project' => $project->load('skills'),
+            'skills' => $data['skills'],
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(ProjectRequest $request, ProjectService $projectService): RedirectResponse
     {
-        $projectService->create($request->validated());
+        try {
+            $projectService->create($request->validated());
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+            return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to create project. Please try again.');
+        }
     }
 
     /**
@@ -49,9 +66,13 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, Project $project, ProjectService $projectService): RedirectResponse
     {
-        $projectService->update($project, $request->validated());
+        try {
+            $projectService->update($project, $request->validated());
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
+            return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to update project. Please try again.');
+        }
     }
 
     /**
@@ -59,8 +80,12 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project, ProjectService $projectService): RedirectResponse
     {
-        $projectService->delete($project);
+        try {
+            $projectService->delete($project);
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
+            return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to delete project. Please try again.');
+        }
     }
 }

@@ -1,55 +1,151 @@
 <script setup lang="ts">
-import FrontLayout from '@/Layouts/FrontLayout.vue';
-import ProjectsGrid from '@/Components/Frontend/ProjectsGrid.vue';
 import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import AboutSection from '@/Components/Frontend/AboutSection.vue';
+import BlogSection from '@/Components/Frontend/BlogSection.vue';
+import ContactCtaSection from '@/Components/Frontend/ContactCtaSection.vue';
+import HeroSection from '@/Components/Frontend/HeroSection.vue';
+import ProjectsSection from '@/Components/Frontend/ProjectsSection.vue';
+import SkillsSection from '@/Components/Frontend/SkillsSection.vue';
+import TestimonialsSection from '@/Components/Frontend/TestimonialsSection.vue';
+import FrontLayout from '@/Layouts/FrontLayout.vue';
+
+type Banner = {
+    id: number;
+    title: string;
+    subtitle: string | null;
+    image_path: string;
+    cta_text: string | null;
+    cta_url: string | null;
+};
+
+type About = {
+    heading: string;
+    content: string;
+    photo_path: string;
+    resume_url: string | null;
+};
+
+type Skill = {
+    id: number;
+    name: string;
+    proficiency: number | null;
+    icon: string | null;
+};
+
+type Project = {
+    id: number;
+    title: string;
+    summary: string | null;
+    thumbnail_path: string | null;
+    project_url: string | null;
+    repository_url: string | null;
+};
+
+type Blog = {
+    id: number;
+    title: string;
+    slug: string;
+    excerpt: string | null;
+    featured_image: string | null;
+    published_at: string | null;
+};
+
+type Testimonial = {
+    id: number;
+    client_name: string;
+    client_role: string | null;
+    company: string | null;
+    quote: string;
+    rating: number | null;
+};
+
+type CollectionLike<T> = T[] | { data?: T[] } | null | undefined;
+
+const props = defineProps<{
+    banners: CollectionLike<Banner>;
+    about: About | null;
+    skills: CollectionLike<Skill>;
+    featured_projects: CollectionLike<Project>;
+    testimonials: CollectionLike<Testimonial>;
+    recent_blogs: CollectionLike<Blog>;
+}>();
+
+const toArray = <T>(value: CollectionLike<T>): T[] => {
+    if (Array.isArray(value)) {
+        return value;
+    }
+
+    if (value && Array.isArray(value.data)) {
+        return value.data;
+    }
+
+    return [];
+};
+
+const banners = computed(() => toArray(props.banners));
+const skills = computed(() => toArray(props.skills));
+const featuredProjects = computed(() => toArray(props.featured_projects));
+const testimonials = computed(() => toArray(props.testimonials));
+const recentBlogs = computed(() => toArray(props.recent_blogs));
+const imageUrl = (path?: string | null): string => {
+    if (!path) {
+        return '';
+    }
+
+    if (path.startsWith('http')) {
+        return path;
+    }
+
+    const normalizedPath = path
+        .replace(/^\/+/, '')
+        .replace(/^public\//, '')
+        .replace(/^storage\/public\//, 'storage/');
+
+    return `/${normalizedPath}`;
+};
+
+const formatDate = (date: string | null): string => {
+    if (!date) {
+        return '';
+    }
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+        return '';
+    }
+
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+    }).format(parsedDate);
+};
 </script>
 
 <template>
     <Head title="Home" />
 
-    <FrontLayout page-title="Portfolio">
-        <!-- Banners Hero -->
-        <div v-if="banners.length" class="relative h-96 overflow-hidden rounded-lg mb-8">
-            <div v-for="(banner, index) in banners.slice(0, 1)" :key="index" class="absolute inset-0">
-                <img :src="`/storage/${banner.image_path}`" :alt="banner.subtitle" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <div class="text-center text-white">
-                        <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ banner.subtitle }}</h1>
-                        <a v-if="banner.cta_url" :href="banner.cta_url" class="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
-                            {{ banner.cta_text }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <FrontLayout>
+        <HeroSection
+            :banners="banners"
+            :image-url="imageUrl"
+            :resume-url="about?.resume_url"
+        />
 
-        <!-- Featured Projects -->
-        <section v-if="projects.length" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Featured Projects</h2>
-            <ProjectsGrid :projects="projects" />
-        </section>
+        <AboutSection
+            v-if="about"
+            :heading="about.heading"
+            :content="about.content"
+            :image-url="imageUrl(about.photo_path)"
+        />
 
-        <!-- Skills -->
-        <section v-if="skills.length" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Skills</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <div v-for="skill in skills" :key="skill.id" class="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    {{ skill.name }}
-                </div>
-            </div>
-        </section>
-
-        <!-- Recent Blogs -->
-        <section v-if="recent_blogs.length" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Recent Blogs</h2>
-            <!-- Add blog grid -->
-        </section>
-
-        <!-- Testimonials -->
-        <section v-if="testimonials.length" class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Testimonials</h2>
-            <!-- Add testimonial carousel -->
-        </section>
+        <SkillsSection v-if="skills.length" :skills="skills" />
+        <ProjectsSection v-if="featuredProjects.length" :projects="featuredProjects" :image-url="imageUrl" />
+        <TestimonialsSection v-if="testimonials.length" :testimonials="testimonials" />
+        <BlogSection v-if="recentBlogs.length" :blogs="recentBlogs" :image-url="imageUrl" :format-date="formatDate" />
+        <ContactCtaSection />
     </FrontLayout>
 </template>
 

@@ -23,10 +23,15 @@ createInertiaApp({
         return page();
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const vueApp = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+            .use(ZiggyVue);
+
+        if (typeof window !== 'undefined') {
+            vueApp.mount(el);
+        }
+
+        return vueApp;
     },
     progress: {
         color: '#4B5563',

@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const page = usePage<PageProps>();
-const appName = computed(() => (page.props as any)?.app?.name ?? 'Portfolio');
+const appName = computed(() => (page.props as any)?.app?.name ?? 'LAVUE');
 const fullTitle = computed(() => `${props.title} - ${appName.value}`);
 </script>
 

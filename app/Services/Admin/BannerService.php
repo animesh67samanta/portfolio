@@ -35,9 +35,12 @@ class BannerService
      */
     public function update(Banner $banner, array $data): Banner
     {
-        if (isset($data['image_path'])) {
+        if (array_key_exists('image_path', $data) && $data['image_path'] instanceof \Illuminate\Http\UploadedFile) {
             $this->imageService->deleteImage($banner->image_path);
             $data['image_path'] = $this->imageService->storeImage($data['image_path'], 'banners');
+        } elseif (array_key_exists('image_path', $data) && is_null($data['image_path'])) {
+            // $this->imageService->deleteImage($banner->image_path);
+            unset($data['image_path']);
         } else {
             unset($data['image_path']);
         }

@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Model;
     'photo_path',
     'resume_url',
     'status',
+    'name',
+    'email',
+    'mobile',
+    'current_address',
+    'permanent_address'
 ])]
 class About extends Model
 {
@@ -24,5 +29,10 @@ class About extends Model
     public function scopePublished($query): Builder
     {
         return $query->where('status', 'published');
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo_path ? asset($this->photo_path) : null;
     }
 }

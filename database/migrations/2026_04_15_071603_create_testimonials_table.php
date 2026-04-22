@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('client_role')->nullable();
             $table->string('company')->nullable();
             $table->string('avatar_path')->nullable();
-            $table->text('quote');
+            $table->text('quote')->nullable();
             $table->unsignedTinyInteger('rating')->nullable();
             $table->string('status', 20)->default('active')->index();
             $table->unsignedSmallInteger('sort_order')->default(0)->index();
