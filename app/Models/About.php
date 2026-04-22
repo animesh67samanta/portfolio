@@ -17,11 +17,23 @@ use Illuminate\Database\Eloquent\Model;
     'email',
     'mobile',
     'current_address',
-    'permanent_address'
+    'permanent_address',
+    'experiences',
+    'educations'
 ])]
 class About extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'experiences' => 'array',
+        'educations' => 'array',
+    ];
 
     /**
      * Scope for published about.

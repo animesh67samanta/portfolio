@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Form } from '@inertiajs/vue3';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
@@ -14,6 +15,17 @@ import {
     PhotoIcon
 } from '@heroicons/vue/24/outline';
 
+interface CreateBannerFormData {
+    title: string;
+    subtitle: string;
+    image_path?: File | string | null;
+    cta_text: string;
+    cta_url: string;
+    status: 'draft' | 'published' | 'archived';
+    sort_order: number;
+    published_at: string;
+}
+
 type Banner = {
     id: number;
     title: string;
@@ -28,6 +40,8 @@ type Banner = {
 };
 
 const props = defineProps<{
+
+
     banners: {
         data: Banner[];
         links: Array<{ url: string | null; label: string; active: boolean }>;
@@ -42,10 +56,10 @@ const statusOptions = [
 
 // Create Modal
 const isCreateOpen = ref(false);
-const createForm = useForm({
+const createForm = useForm<CreateBannerFormData>({
     title: '',
     subtitle: '',
-    image_path: null as File | string| null,
+    image_path: null,
     cta_text: '',
     cta_url: '',
     status: 'draft' as 'draft' | 'published' | 'archived',
@@ -56,10 +70,10 @@ const createForm = useForm({
 // Edit Modal
 const isEditOpen = ref(false);
 const editing = ref<Banner | null>(null);
-const editForm = useForm({
+const editForm = useForm<CreateBannerFormData>({
     title: '',
     subtitle: '',
-    image_path: null as File | string | null,
+    image_path: null,
     cta_text: '',
     cta_url: '',
     status: 'draft' as 'draft' | 'published' | 'archived',
@@ -103,7 +117,7 @@ const closeCreate = () => {
 const submitCreate = () => {
     // Clean image_path before submit if string (existing) - shouldn't happen on create
     if (typeof createForm.image_path === 'string') {
-        delete createForm.image_path;
+        createForm.image_path = undefined;
     }
     createForm.post(route('admin.banners.store'), {
         forceFormData: true,
@@ -147,7 +161,7 @@ const submitUpdate = () => {
 
     // Clean image_path before submit if string (existing)
     if (typeof editForm.image_path === 'string') {
-        delete editForm.image_path;
+        editForm.image_path = undefined;
     }
     editForm.put(route('admin.banners.update', editing.value.id), {
         method: 'patch',
@@ -193,8 +207,8 @@ const cancelDelete = () => {
 };
 
 // Get image URL
-const getImageUrl = (path: string) => {
-    if (!path) return null;
+const getImageUrl = (path: string): string | undefined => {
+    if (!path) return undefined;
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage')) return path;
     return `/${path.replace(/^\/?storage\/?/, '')}`;
@@ -408,7 +422,7 @@ const getStatusInfo = (status: string) => {
                 </div>
 
                 <form class="mt-6" @submit.prevent="submitUpdate">
-                    <BannerFormFields 
+                            <BannerFormFields 
                         :form="editForm" 
                         :status-options="statusOptions" 
                         prefix="edit"

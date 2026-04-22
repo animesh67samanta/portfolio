@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { Form } from '@inertiajs/vue3';
 import { Head, useForm, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import Modal from '@/Components/Modal.vue';
 import SkillFormFields from '@/Components/Admin/Forms/SkillFormFields.vue';
@@ -13,6 +14,15 @@ import {
     XMarkIcon,
     CodeBracketIcon
 } from '@heroicons/vue/24/outline';
+
+interface CreateSkillFormData {
+    name: string;
+    slug: string;
+    proficiency: number | null;
+    icon?: File | string | null;
+    status: 'active' | 'inactive';
+    sort_order: number;
+}
 
 type Skill = {
     id: number;
@@ -37,11 +47,11 @@ const statusOptions = [
 
 // Create Modal
 const isCreateOpen = ref(false);
-const createForm = useForm({
+const createForm = useForm<CreateSkillFormData>({
     name: '',
     slug: '',
-    proficiency: null as number | null,
-    icon: null as File | string | null,
+    proficiency: null,
+    icon: null,
     status: 'active' as 'active' | 'inactive',
     sort_order: 0,
 });
@@ -49,11 +59,11 @@ const createForm = useForm({
 // Edit Modal
 const isEditOpen = ref(false);
 const editing = ref<Skill | null>(null);
-const editForm = useForm({
+const editForm = useForm<CreateSkillFormData>({
     name: '',
     slug: '',
-    proficiency: null as number | null,
-    icon: null as File | string | null,
+    proficiency: null,
+    icon: null,
     status: 'active' as 'active' | 'inactive',
     sort_order: 0,
 });
@@ -94,7 +104,7 @@ const closeCreate = () => {
 const submitCreate = () => {
     // Clean icon before submit if string (existing) - shouldn't happen on create
     if (typeof createForm.icon === 'string') {
-        delete createForm.icon;
+        createForm.icon = undefined;
     }
     createForm.post(route('admin.skills.store'), {
         forceFormData: true,
@@ -135,7 +145,7 @@ const submitUpdate = () => {
 
     // Clean icon before submit if string (existing)
     if (typeof editForm.icon === 'string') {
-        delete editForm.icon;
+        editForm.icon = undefined;
     }
     editForm.put(route('admin.skills.update', editing.value.id), {
         method: 'patch',

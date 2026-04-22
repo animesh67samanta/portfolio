@@ -29,6 +29,16 @@ class AboutRequest extends FormRequest
             'photo_path' => [$photoRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'resume_url' => ['nullable', 'url', 'max:255'],
             'status' => ['required', 'in:draft,published,archived'],
+            'experiences' => ['nullable', 'array', 'max:5'],
+            'experiences.*.title' => ['required_with:experiences.*', 'string', 'max:255'],
+            'experiences.*.company' => ['required_with:experiences.*', 'string', 'max:255'],
+            'experiences.*.duration' => ['required_with:experiences.*', 'string', 'max:100'],
+            'experiences.*.description' => ['required_with:experiences.*', 'string', 'max:1000'],
+            'educations' => ['nullable', 'array', 'max:4'],
+            'educations.*.degree' => ['required_with:educations.*', 'string', 'max:255'],
+            'educations.*.institution' => ['required_with:educations.*', 'string', 'max:255'],
+            'educations.*.year' => ['required_with:educations.*', 'string', 'max:10'],
+            'educations.*.description' => ['required_with:educations.*', 'string', 'max:1000'],
         ];
     }
 }
