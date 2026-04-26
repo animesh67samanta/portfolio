@@ -103,60 +103,60 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <section id="home" class="relative overflow-hidden rounded-3xl bg-white">
-        <!-- Grey diagonal panel behind the hero image -->
-        <div class="pointer-events-none absolute inset-y-0 right-0 w-[58%] bg-slate-200 transform -skew-x-12 origin-top-right" />
+    <section id="home" class="relative h-screen overflow-hidden bg-white">
 
-        <div class="relative grid gap-8 px-6 py-14 md:grid-cols-2 md:items-center md:px-12 md:py-20">
-            <div class="flex flex-col justify-center">
-                <p class="text-sm uppercase tracking-[0.18em] text-slate-500">
-                    Hello! This is <span class="font-semibold text-slate-700">{{ displayName }}</span>
-                </p>
-                <h1 class="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">{{ heading }}</h1>
-                <p class="mt-4 max-w-xl text-slate-600">{{ description }}</p>
+        <!-- RIGHT IMAGE -->
+        <div class="absolute inset-y-0 right-0 w-[60%]">
+            <img
+                v-if="props.imageUrl(activeBanner.image_path)"
+                :src="props.imageUrl(activeBanner.image_path)"
+                class="h-full w-full object-cover"
+            />
+        </div>
 
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a
-                        v-if="activeBanner.cta_url"
-                        :href="activeBanner.cta_url"
-                        class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50"
-                    >
-                        {{ activeBanner.cta_text || 'Hire me' }}
-                    </a>
-                    <a
-                        v-if="resumeUrl"
-                        :href="resumeUrl"
-                        class="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                    >
-                        Download CV
-                    </a>
-                </div>
-            </div>
+        <!-- DIAGONAL SHAPE -->
+        <div class="absolute inset-y-0 right-[55%] w-[30%] bg-slate-100 skew-x-[-20deg] shadow-z-10 shadow-lg"></div>
 
-            <div class="relative">
-                <img
-                    v-if="props.imageUrl(activeBanner.image_path)"
-                    :src="props.imageUrl(activeBanner.image_path)"
-                    :alt="activeBanner.title"
-                    class="relative z-10 h-72 w-full rounded-2xl object-contain shadow-sm md:h-[420px]"
-                />
+        <!-- CONTENT -->
+        <div class="relative z-20 flex h-full items-center">
+            <div class="max-w-6xl mx-auto px-6 w-full">
 
-                <div
-                    v-if="slides.length > 1"
-                    class="absolute inset-x-6 bottom-5 flex items-center justify-between gap-4"
-                >
-                    <div class="flex gap-2">
-                        <button
-                            v-for="(slide, index) in slides"
-                            :key="slide.id"
-                            type="button"
-                            class="h-2.5 w-2.5 rounded-full transition"
-                            :class="index === currentSlide ? 'bg-indigo-600' : 'bg-indigo-600/30'"
-                            @click="goToSlide(index)"
-                        />
+                <div class="max-w-xl">
+                    <!-- SMALL TEXT -->
+                    <p class="text-xs tracking-[0.25em] text-[#a3a17e] uppercase mt-10">
+                        WE DESIGN & BUILD BRANDS
+                    </p>
+
+                    <!-- MAIN HEADING -->
+                    <h1 class="mt-4 text-5xl md:text-6xl font-extrabold leading-tight text-black">
+                        Hi, I am 
+                        <span class="text-[#a3a17e]">{{ displayName }}</span>
+                        <br />
+                        This is my favorite work.
+                    </h1>
+
+                    <!-- BUTTONS -->
+                    <div class="mt-8 flex gap-4">
+                        <a
+                            v-if="activeBanner.cta_url"
+                            :href="activeBanner.cta_url"
+                            class="px-6 py-3 rounded bg-[#a3a17e] text-white text-sm font-semibold hover:opacity-90 transition"
+                        >
+                            Hire me
+                        </a>
+
+                        <a
+                            v-if="resumeUrl"
+                            :href="resumeUrl"
+                            class="px-6 py-3 rounded border border-[#a3a17e] text-[#a3a17e] text-sm font-semibold hover:bg-[#a3a17e] hover:text-white transition"
+                        >
+                            Download CV
+                        </a>
                     </div>
                 </div>
+
             </div>
         </div>
+
     </section>
 </template>

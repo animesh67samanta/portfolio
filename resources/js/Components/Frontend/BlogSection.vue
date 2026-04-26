@@ -15,9 +15,9 @@ defineProps<{
 </script>
 
 <template>
-    <section id="blog" class="mt-20">
+    <section id="blog" class="mt-20 max-w-6xl mx-auto">
         <div class="mb-8 text-center">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-600">Blog</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">Blog</p>
             <h2 class="mt-2 text-3xl font-bold text-slate-900">Recent Posts</h2>
         </div>
         <div class="grid gap-6 md:grid-cols-3">

@@ -39,7 +39,7 @@ const styles = computed(() => {
     if (variant.value === 'success') {
         return {
             container: 'border-emerald-200 bg-emerald-50 text-emerald-900',
-            icon: 'text-emerald-600',
+            icon: 'text-indigo-400',
         };
     }
 

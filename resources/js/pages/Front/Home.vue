@@ -8,6 +8,8 @@ import HeroSection from '@/Components/Frontend/HeroSection.vue';
 import ProjectsSection from '@/Components/Frontend/ProjectsSection.vue';
 import SkillsSection from '@/Components/Frontend/SkillsSection.vue';
 import TestimonialsSection from '@/Components/Frontend/TestimonialsSection.vue';
+import ExperienceSection from '@/Components/Frontend/ExperienceSection.vue';
+import EducationSection from '@/Components/Frontend/EducationSection.vue';
 import FrontLayout from '@/Layouts/FrontLayout.vue';
 
 type Banner = {
@@ -22,8 +24,14 @@ type Banner = {
 type About = {
     heading: string;
     content: string;
-    photo_path: string;
+    photo_path: string | null;
     resume_url: string | null;
+    status : string;
+    name: string | null;
+    email: string | null;
+    mobile: string | null;
+    current_address: string | null;
+    permanent_address: string | null;
 };
 
 type Skill = {
@@ -58,6 +66,24 @@ type Testimonial = {
     company: string | null;
     quote: string;
     rating: number | null;
+    image?: string | null;
+};
+
+
+type Education = {
+    degree: string;
+    institution: string;
+    year: string;
+    description: string;
+}
+
+type Experience = {
+    title: string;
+    company: string;
+    duration: string;
+    description: string;
+    company_url: string;
+    location: string;
 };
 
 type CollectionLike<T> = T[] | { data?: T[] } | null | undefined;
@@ -65,6 +91,8 @@ type CollectionLike<T> = T[] | { data?: T[] } | null | undefined;
 const props = defineProps<{
     banners: CollectionLike<Banner>;
     about: About | null;
+    experiences: CollectionLike<Experience>;
+    educations: CollectionLike<Education>;
     skills: CollectionLike<Skill>;
     featured_projects: CollectionLike<Project>;
     testimonials: CollectionLike<Testimonial>;
@@ -88,9 +116,11 @@ const skills = computed(() => toArray(props.skills));
 const featuredProjects = computed(() => toArray(props.featured_projects));
 const testimonials = computed(() => toArray(props.testimonials));
 const recentBlogs = computed(() => toArray(props.recent_blogs));
+const experiences = computed(() => toArray(props.experiences));
+const educations = computed(() => toArray(props.educations));
 const imageUrl = (path?: string | null): string => {
     if (!path) {
-        return '';
+        return '/uploads/No_Image_Available.jpg';
     }
 
     if (path.startsWith('http')) {
@@ -125,7 +155,7 @@ const formatDate = (date: string | null): string => {
 </script>
 
 <template>
-    <Head title="Home" />
+    <Head title="" />
 
     <FrontLayout>
         <HeroSection
@@ -139,8 +169,16 @@ const formatDate = (date: string | null): string => {
             :heading="about.heading"
             :content="about.content"
             :image-url="imageUrl(about.photo_path)"
+            :name="about.name"
+            :email="about.email"
+            :mobile="about.mobile"
+            :current-address="about.current_address"
+            :permanent-address="about.permanent_address"
+            :resume-url="about.resume_url"
         />
 
+        <ExperienceSection v-if="experiences.length" :experiences="experiences" />
+        <EducationSection v-if="educations.length" :educations="educations" />
         <SkillsSection v-if="skills.length" :skills="skills" />
         <ProjectsSection v-if="featuredProjects.length" :projects="featuredProjects" :image-url="imageUrl" />
         <TestimonialsSection v-if="testimonials.length" :testimonials="testimonials" />

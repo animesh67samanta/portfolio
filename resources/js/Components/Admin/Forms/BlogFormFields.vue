@@ -64,7 +64,7 @@ const getStatusColor = (status: string) => {
                 <!-- Title & Slug Section -->
                 <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
-                        <DocumentTextIcon class="h-5 w-5 text-indigo-600" />
+                        <DocumentTextIcon class="h-5 w-5 text-indigo-400" />
                         <h3 class="text-lg font-semibold text-gray-900">Blog Post Details</h3>
                     </div>
                     
@@ -115,7 +115,7 @@ const getStatusColor = (status: string) => {
                 <!-- Cover Image Section -->
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
-                        <PhotoIcon class="h-5 w-5 text-indigo-600" />
+                        <PhotoIcon class="h-5 w-5 text-indigo-400" />
                         <h3 class="text-lg font-semibold text-gray-900">Cover Image</h3>
                     </div>
                     
@@ -169,7 +169,7 @@ const getStatusColor = (status: string) => {
                 <!-- Status Section -->
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
-                        <EyeIcon class="h-5 w-5 text-indigo-600" />
+                        <EyeIcon class="h-5 w-5 text-indigo-400" />
                         <h3 class="text-lg font-semibold text-gray-900">Publication Status</h3>
                     </div>
                     
@@ -181,7 +181,7 @@ const getStatusColor = (status: string) => {
                                 class="flex cursor-pointer items-center gap-3 rounded-lg border-2 p-3 transition-all"
                                 :class="[
                                     form.status === option.value
-                                        ? 'border-indigo-600 bg-indigo-50'
+                                        ? 'border-indigo-400 bg-indigo-50'
                                         : 'border-gray-200 bg-white hover:border-gray-300'
                                 ]"
                             >
@@ -189,7 +189,7 @@ const getStatusColor = (status: string) => {
                                     type="radio"
                                     :value="option.value"
                                     v-model="form.status"
-                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                    class="h-4 w-4 text-indigo-400 focus:ring-indigo-500"
                                 />
                                 <div class="flex-1">
                                     <span class="font-medium text-gray-900">{{ option.label }}</span>
@@ -237,7 +237,7 @@ const getStatusColor = (status: string) => {
                 <!-- Featured Image Section -->
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div class="flex items-center gap-2 mb-4">
-                        <PhotoIcon class="h-5 w-5 text-indigo-600" />
+                        <PhotoIcon class="h-5 w-5 text-indigo-400" />
                         <h3 class="text-lg font-semibold text-gray-900">Featured Image</h3>
                     </div>
                     

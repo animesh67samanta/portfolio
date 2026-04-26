@@ -215,7 +215,7 @@ const formatDate = (date: string | null) => {
 
 // Get featured image URL
 const getImageUrl = (path: string | null) => {
-    if (!path) return null;
+    if (!path) return '/uploads/No_Image_Available.jpg';
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage')) return path;
     return `/${path.replace(/^\/?storage\/?/, '')}`;
@@ -255,15 +255,15 @@ const getImageUrl = (path: string | null) => {
             <!-- Header with Create Button -->
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-900">Blog Posts</h2>
+                    <h2 class="text-2xl font-bold text-gray-900">Blogs</h2>
                     <p class="mt-1 text-sm text-gray-500">Manage and organize your blog content</p>
                 </div>
                 <button
                     @click="openCreate"
-                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-600 hover:shadow-lg active:scale-95"
+                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-400 hover:shadow-lg active:scale-95"
                 >
                     <PlusIcon class="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
-                    <span>Create Blog Post</span>
+                    <span>Create Blog</span>
                 </button>
             </div>
 
@@ -272,10 +272,10 @@ const getImageUrl = (path: string | null) => {
                 <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-gray-900">All Posts</h2>
-                        <p class="mt-1 text-sm text-gray-500">Your published and draft blog posts</p>
+                        <p class="mt-1 text-sm text-gray-500">Your published and draft blogs</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-600">
+                        <span class="rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-400">
                             {{ props.blogs.data.length }} posts
                         </span>
                     </div>
@@ -300,7 +300,7 @@ const getImageUrl = (path: string | null) => {
                             <div class="absolute top-3 right-3 flex gap-2">
                                 <button
                                     @click="openEdit(blog)"
-                                    class="rounded-lg bg-white/90 p-2 text-indigo-600 backdrop-blur-sm transition-all hover:bg-indigo-600 hover:text-white"
+                                    class="rounded-lg bg-white/90 p-2 text-indigo-400 backdrop-blur-sm transition-all hover:bg-indigo-400 hover:text-white"
                                     title="Edit"
                                 >
                                     <PencilIcon class="h-4 w-4" />
@@ -351,14 +351,14 @@ const getImageUrl = (path: string | null) => {
                     <div v-if="props.blogs.data.length === 0" class="col-span-full">
                         <div class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
                             <DocumentTextIcon class="h-16 w-16 text-gray-400" />
-                            <h3 class="mt-4 text-lg font-semibold text-gray-900">No blog posts yet</h3>
-                            <p class="mt-2 text-sm text-gray-500">Get started by creating your first blog post</p>
+                            <h3 class="mt-4 text-lg font-semibold text-gray-900">No blog yet</h3>
+                            <p class="mt-2 text-sm text-gray-500">Get started by creating your first blog</p>
                             <button
                                 @click="openCreate"
-                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-400 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
                             >
                                 <PlusIcon class="h-4 w-4" />
-                                Create Blog Post
+                                Create Blog
                             </button>
                         </div>
                     </div>
@@ -371,7 +371,7 @@ const getImageUrl = (path: string | null) => {
             <div class="p-6">
                 <div class="flex items-center justify-between border-b border-gray-200 pb-4">
                     <div>
-                        <h3 class="text-xl font-semibold text-gray-900">Create New Blog Post</h3>
+                        <h3 class="text-xl font-semibold text-gray-900">Create New Blog</h3>
                         <p class="mt-1 text-sm text-gray-500">Write and publish engaging content for your audience</p>
                     </div>
                     <button @click="closeCreate" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -400,13 +400,13 @@ const getImageUrl = (path: string | null) => {
                         <LoadingButton 
                             :loading="createForm.processing" 
                             :disabled="createForm.processing"
-                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">
                                 <PlusIcon class="mr-2 h-5 w-5 transition-all duration-300 group-hover:rotate-90 group-hover:scale-110" />
                                 <span class="relative">
-                                    Create Blog Post
+                                    Create Blog
                                     <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
                                 </span>
                             </span>
@@ -421,7 +421,7 @@ const getImageUrl = (path: string | null) => {
             <div class="p-6">
                 <div class="flex items-center justify-between border-b border-gray-200 pb-4">
                     <div>
-                        <h3 class="text-xl font-semibold text-gray-900">Edit Blog Post</h3>
+                        <h3 class="text-xl font-semibold text-gray-900">Edit Blog</h3>
                         <p class="mt-1 text-sm text-gray-500">Update your blog content and settings</p>
                     </div>
                     <button @click="closeEdit" class="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
@@ -450,13 +450,13 @@ const getImageUrl = (path: string | null) => {
                         <LoadingButton 
                             :loading="editForm.processing" 
                             :disabled="editForm.processing"
-                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">
                                 <PlusIcon class="mr-2 h-5 w-5 transition-all duration-300 group-hover:rotate-90 group-hover:scale-110" />
                                 <span class="relative">
-                                    Update Blog Post
+                                    Update Blog
                                     <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full"></span>
                                 </span>
                             </span>
@@ -475,7 +475,7 @@ const getImageUrl = (path: string | null) => {
                     </div>
                 </div>
                 <div class="mt-4 text-center">
-                    <h3 class="text-lg font-semibold text-gray-900">Delete Blog Post</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Delete Blog</h3>
                     <p class="mt-2 text-sm text-gray-500">
                         Are you sure you want to delete "<span class="font-semibold">{{ deleting?.title }}</span>"?
                         This action cannot be undone.

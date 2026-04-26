@@ -15,9 +15,9 @@ defineProps<{
 </script>
 
 <template>
-    <section id="projects" class="mt-20">
+    <section id="projects" class="mt-20 max-w-6xl mx-auto ">
         <div class="mb-8 text-center">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-600">Projects</p>
+            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">Projects</p>
             <h2 class="mt-2 text-3xl font-bold text-slate-900">Latest Work</h2>
         </div>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -40,7 +40,7 @@ defineProps<{
                             v-if="project.project_url"
                             :href="project.project_url"
                             target="_blank"
-                            class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                            class="rounded-md bg-indigo-400 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
                         >
                             Live
                         </a>

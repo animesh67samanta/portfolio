@@ -53,7 +53,7 @@ const statsCards = [
     value: props.stats.projects, 
     icon: ChartBarIcon, 
     href: '/admin/projects', 
-    color: 'from-blue-500 to-indigo-600',
+    color: 'from-blue-500 to-indigo-400',
     bgColor: 'bg-blue-50',
     textColor: 'text-blue-600',
     trend: '+12%',
@@ -149,7 +149,7 @@ const getGreeting = () => {
 
   <AdminLayout page-title="Dashboard">
     <!-- Welcome Section -->
-    <div class="mb-8 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 p-6 text-white shadow-xl">
+    <div class="mb-8 rounded-2xl bg-gradient-to-r from-indigo-400 to-indigo-800 p-6 text-white shadow-xl">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p class="text-sm font-medium text-indigo-200">{{ getGreeting() }}!</p>
@@ -196,11 +196,11 @@ const getGreeting = () => {
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-3">
             <div class="rounded-lg bg-indigo-100 p-2">
-              <EyeIcon class="h-5 w-5 text-indigo-600" />
+              <EyeIcon class="h-5 w-5 text-indigo-400" />
             </div>
             <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
           </div>
-          <span class="rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-600">
+          <span class="rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-400">
             {{ quickActions.length }} items
           </span>
         </div>
@@ -213,7 +213,7 @@ const getGreeting = () => {
             class="group flex items-center gap-4 rounded-xl border border-gray-200 p-4 transition-all duration-300 hover:border-indigo-300 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-transparent hover:shadow-md"
           >
             <div class="rounded-lg bg-indigo-100 p-3 transition-all duration-300 group-hover:bg-indigo-200 group-hover:scale-110">
-              <component :is="action.icon" class="h-5 w-5 text-indigo-600" />
+              <component :is="action.icon" class="h-5 w-5 text-indigo-400" />
             </div>
             <div class="flex-1">
               <p class="font-medium text-gray-900 group-hover:text-indigo-700">{{ action.label }}</p>
@@ -230,7 +230,7 @@ const getGreeting = () => {
           <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <div class="flex items-center gap-3">
               <div class="rounded-lg bg-indigo-100 p-2">
-                <PencilIcon class="h-5 w-5 text-indigo-600" />
+                <PencilIcon class="h-5 w-5 text-indigo-400" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
             </div>
@@ -239,7 +239,7 @@ const getGreeting = () => {
             <div class="flex gap-1 rounded-lg bg-gray-100 p-1">
               <button 
                 class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200"
-                :class="activeTab === 'projects' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
+                :class="activeTab === 'projects' ? 'bg-white text-indigo-400 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                 @click="activeTab = 'projects'"
               >
                 <ChartBarIcon class="h-4 w-4" />
@@ -247,7 +247,7 @@ const getGreeting = () => {
               </button>
               <button 
                 class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200"
-                :class="activeTab === 'blogs' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
+                :class="activeTab === 'blogs' ? 'bg-white text-indigo-400 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                 @click="activeTab = 'blogs'"
               >
                 <DocumentTextIcon class="h-4 w-4" />
@@ -255,7 +255,7 @@ const getGreeting = () => {
               </button>
               <button 
                 class="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200"
-                :class="activeTab === 'contacts' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
+                :class="activeTab === 'contacts' ? 'bg-white text-indigo-400 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                 @click="activeTab = 'contacts'"
               >
                 <EnvelopeIcon class="h-4 w-4" />
@@ -273,13 +273,13 @@ const getGreeting = () => {
               @click="router.visit(`/admin/projects/${project.id}/edit`)"
             >
               <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-400 text-white shadow-md">
                   <ChartBarIcon class="h-6 w-6" />
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-start justify-between gap-2">
                     <div>
-                      <p class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ project.title }}</p>
+                      <p class="font-semibold text-gray-900 group-hover:text-indigo-400 transition-colors">{{ project.title }}</p>
                       <p class="mt-1 text-sm text-gray-500 line-clamp-1">{{ project.excerpt || 'No description provided' }}</p>
                     </div>
                     <div class="flex flex-col items-end gap-2">
@@ -298,7 +298,7 @@ const getGreeting = () => {
                 <ChartBarIcon class="h-8 w-8 text-gray-400" />
               </div>
               <p class="mt-3 text-sm text-gray-500">No recent projects</p>
-              <a href="/admin/projects/create" class="mt-2 text-sm text-indigo-600 hover:text-indigo-700">Create your first project →</a>
+              <a href="/admin/projects/create" class="mt-2 text-sm text-indigo-400 hover:text-indigo-700">Create your first project →</a>
             </div>
           </div>
 
@@ -317,7 +317,7 @@ const getGreeting = () => {
                 <div class="min-w-0 flex-1">
                   <div class="flex items-start justify-between gap-2">
                     <div>
-                      <p class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ blog.title }}</p>
+                      <p class="font-semibold text-gray-900 group-hover:text-indigo-400 transition-colors">{{ blog.title }}</p>
                       <p class="mt-1 text-sm text-gray-500 line-clamp-1">{{ blog.excerpt || 'No excerpt available' }}</p>
                     </div>
                     <div class="flex flex-col items-end gap-2">
@@ -336,7 +336,7 @@ const getGreeting = () => {
                 <DocumentTextIcon class="h-8 w-8 text-gray-400" />
               </div>
               <p class="mt-3 text-sm text-gray-500">No recent blogs</p>
-              <a href="/admin/blogs" class="mt-2 text-sm text-indigo-600 hover:text-indigo-700">Write your first blog post →</a>
+              <a href="/admin/blogs" class="mt-2 text-sm text-indigo-400 hover:text-indigo-700">Write your first blog post →</a>
             </div>
           </div>
 
@@ -381,7 +381,7 @@ const getGreeting = () => {
           <div class="mt-4 border-t border-gray-100 pt-4 text-center">
             <a 
               :href="`/admin/${activeTab}`" 
-              class="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+              class="inline-flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-700 transition-colors"
             >
               View all {{ activeTab }}
               <ArrowTopRightOnSquareIcon class="h-4 w-4" />

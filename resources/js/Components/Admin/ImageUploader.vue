@@ -45,7 +45,7 @@ const handleDragOver = (e: DragEvent) => {
 watch(() => props.modelValue, (value) => {
   console.log('ImageUploader modelValue changed:', value, typeof value, value instanceof File);
   if (typeof value === 'string' && value) {
-    preview.value = value.startsWith('http') ? value : `/storage/${value}`
+    preview.value = value.startsWith('http') ? value : `/${value}`
   } else if (value instanceof File) {
     const reader = new FileReader()
     reader.onload = (e) => {

@@ -248,7 +248,7 @@ const submit = () => {
                     <label class="flex items-center gap-2 text-sm text-slate-700">
                         <input
                             v-model="form.is_featured"
-                            class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                            class="rounded border-slate-300 text-indigo-400 shadow-sm focus:ring-indigo-500"
                             type="checkbox"
                         />
                         Mark as featured
@@ -273,7 +273,7 @@ const submit = () => {
                                 :value="s.id"
                                 v-model="form.skill_ids"
                                 type="checkbox"
-                                class="rounded border-slate-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                class="rounded border-slate-300 text-indigo-400 shadow-sm focus:ring-indigo-500"
                             />
                             <span>{{ s.name }}</span>
                         </label>
@@ -294,7 +294,7 @@ const submit = () => {
                     <LoadingButton 
                         :loading="form.processing" 
                         :disabled="form.processing"
-                        class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                     >
                         <span class="flex items-center">

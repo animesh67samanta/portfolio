@@ -208,7 +208,7 @@ const cancelDelete = () => {
 
 // Get image URL
 const getImageUrl = (path: string): string | undefined => {
-    if (!path) return undefined;
+    if (!path) return '/uploads/No_Image_Available.jpg';
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage')) return path;
     return `/${path.replace(/^\/?storage\/?/, '')}`;
@@ -262,7 +262,7 @@ const getStatusInfo = (status: string) => {
                 </div>
                 <button
                     @click="openCreate"
-                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-600 hover:shadow-lg active:scale-95"
+                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-400 hover:shadow-lg active:scale-95"
                 >
                     <PlusIcon class="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
                     <span>Create Banner</span>
@@ -289,7 +289,7 @@ const getStatusInfo = (status: string) => {
                             <div class="absolute top-3 right-3 flex gap-2">
                                 <button
                                     @click="openEdit(banner)"
-                                    class="rounded-lg bg-white/90 p-2 text-indigo-600 backdrop-blur-sm transition-all hover:bg-indigo-600 hover:text-white"
+                                    class="rounded-lg bg-white/90 p-2 text-indigo-400 backdrop-blur-sm transition-all hover:bg-indigo-400 hover:text-white"
                                     title="Edit"
                                 >
                                     <PencilIcon class="h-4 w-4" />
@@ -326,7 +326,7 @@ const getStatusInfo = (status: string) => {
                                 <a 
                                     :href="banner.cta_url || '#'" 
                                     target="_blank"
-                                    class="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                                    class="inline-flex items-center gap-1 text-sm font-medium text-indigo-400 hover:text-indigo-700"
                                 >
                                     {{ banner.cta_text }}
                                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,7 +345,7 @@ const getStatusInfo = (status: string) => {
                             <p class="mt-2 text-sm text-gray-500">Get started by creating your first banner</p>
                             <button
                                 @click="openCreate"
-                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-400 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
                             >
                                 <PlusIcon class="h-4 w-4" />
                                 Create Banner
@@ -391,7 +391,7 @@ const getStatusInfo = (status: string) => {
                         <LoadingButton 
                             :loading="createForm.processing" 
                             :disabled="createForm.processing"
-                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">
@@ -444,7 +444,7 @@ const getStatusInfo = (status: string) => {
                         <LoadingButton 
                             :loading="editForm.processing" 
                             :disabled="editForm.processing"
-                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">

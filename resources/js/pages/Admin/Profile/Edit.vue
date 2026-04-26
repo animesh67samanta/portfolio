@@ -22,7 +22,7 @@ defineProps<{
                 <div class="border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-transparent px-6 py-4">
                     <div class="flex items-center gap-3">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <UserCircleIcon class="h-6 w-6 text-indigo-600" />
+                            <UserCircleIcon class="h-6 w-6 text-indigo-400" />
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Profile Information</h3>
@@ -43,7 +43,7 @@ defineProps<{
                 <div class="border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-transparent px-6 py-4">
                     <div class="flex items-center gap-3">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <KeyIcon class="h-6 w-6 text-indigo-600" />
+                            <KeyIcon class="h-6 w-6 text-indigo-400" />
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900">Update Password</h3>

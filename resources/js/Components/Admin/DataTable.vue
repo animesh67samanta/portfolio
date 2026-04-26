@@ -194,7 +194,7 @@ const getStatusColor = (status: string) => {
               <input
                 type="checkbox"
                 v-model="allSelected"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                class="rounded border-gray-300 text-indigo-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </th>
             <th
@@ -233,7 +233,7 @@ const getStatusColor = (status: string) => {
                 type="checkbox"
                 v-model="selectedItems"
                 :value="item.id"
-                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                class="rounded border-gray-300 text-indigo-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </td>
             <td
@@ -256,7 +256,7 @@ const getStatusColor = (status: string) => {
               <div class="flex items-center gap-3">
                 <Link
                   :href="route(`admin.${props.routeName}.edit`, item.id)"
-                  class="text-indigo-600 hover:text-indigo-900 transition-colors duration-150"
+                  class="text-indigo-400 hover:text-indigo-900 transition-colors duration-150"
                   title="Edit"
                 >
                   <PencilIcon class="h-5 w-5" />
@@ -332,7 +332,7 @@ const getStatusColor = (status: string) => {
                 :class="[
                   'relative inline-flex items-center px-4 py-2 text-sm font-medium border transition-colors duration-150',
                   link.active
-                    ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                    ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-400'
                     : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
                   link.url === null ? 'cursor-not-allowed opacity-50' : '',
                   index === 0 ? 'rounded-l-md' : '',

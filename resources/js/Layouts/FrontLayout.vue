@@ -10,12 +10,24 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    pageTitle: 'LAVUE',
+    pageTitle: 'HUB Protfolio',
     pageInfo: 'Animesh Samanta',
 
 });
 
+const isScrolled = ref(false);
 
+onMounted(() => {
+    const handleScroll = () => {
+        isScrolled.value = window.scrollY > 50;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('scroll', handleScroll);
+    });
+});
 
 const menuOpen = ref(false);
 const activeSection = ref('home');
@@ -33,9 +45,13 @@ const menuItems = [
 let observer: IntersectionObserver | null = null;
 
 const linkClass = (id: string): string =>
+`${
     activeSection.value === id
-        ? 'text-emerald-600 font-semibold'
-        : 'text-slate-600 hover:text-red-500';
+        ? 'text-indigo-400 font-semibold'
+        : isScrolled.value
+        ? 'text-black-700 hover:text-red-500'
+        : 'text-black-600 hover:text-red-300'
+}`;
 
 const closeMenu = (): void => {
     menuOpen.value = false;
@@ -50,15 +66,16 @@ onMounted(() => {
 
     observer = new IntersectionObserver(
         (entries) => {
-            for (const entry of entries) {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    activeSection.value = entry.target.id;
+                    activeSection.value = entry.target.id as string;
+                    return; // Exit early - most visible first
                 }
-            }
+            });
         },
         {
-            rootMargin: '-40% 0px -50% 0px',
-            threshold: 0.1,
+            rootMargin: '-20% 0px -60% 0px',
+            threshold: [0, 0.5],
         },
     );
 
@@ -78,18 +95,23 @@ onBeforeUnmount(() => {
 <template>
     <div class="min-h-screen bg-white text-slate-900">
         <FlashMessages />
-        <header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
-            <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-                <div>
+        <header :class="[
+                'fixed top-0 w-full z-50 transition-all duration-300',
+                isScrolled
+                    ? 'bg-white shadow-md py-3 border-b border-slate-200'
+                    : 'bg-transparent py-6'
+            ]"
+        >
+            <!-- <div class="mx-auto flex max-w-6xl items-center justify-between px-6 transition-all duration-300"> -->
+            <div class="mx-auto flex max-w-6xl items-center justify-between px-6 h-12 transition-all duration-300">
+                <div class="flex items-center h-20 overflow-hidden">
                     <Link href="/">
-                        <div class="flex items-center gap-2 border-2 border-red-500 p-1 rounded">
-                          <ApplicationLogo class="h-10 w-auto" />
-                          <h1 class="text-lg font-semibold text-emerald-600">{{ pageTitle }}</h1>
-                        </div>
+                       <ApplicationLogo class="h-20 w-auto" />
+                        
                     </Link>
                 </div>
                 <!-- <ApplicationLogo /> -->
-               <h1 class="text-lg font-semibold">{{ pageInfo }}</h1>
+               <!-- <h1 class="text-lg font-semibold">{{ pageInfo }}</h1> -->
                 <button
                     type="button"
                     class="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 md:hidden"
@@ -126,13 +148,13 @@ onBeforeUnmount(() => {
             </nav>
         </header>
 
-        <main class="mx-auto max-w-6xl px-6 py-10 md:py-12">
+        <main class="pt-24 mx-auto px-5 md:py-20">
             <slot />
         </main>
 
         <footer class="border-t bg-slate-50">
             <div class="mx-auto max-w-6xl px-6 py-4 text-sm text-slate-600">
-                © {{ currentYear }} Portfolio Website By Animesh Samanta
+                © {{ currentYear }} HUB Portfolio Website By Animesh Samanta
             </div>
         </footer>
     </div>

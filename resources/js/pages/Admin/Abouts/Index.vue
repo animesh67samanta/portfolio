@@ -13,6 +13,8 @@ type ExperienceItem = {
   company: string;
   duration: string;
   description: string;
+  company_url: string;
+    location: string;
 };
 
 type EducationItem = {
@@ -65,7 +67,7 @@ const initializeExperiences = (experiences?: ExperienceItem[]): ExperienceItem[]
         return experiences;
     }
     // Start with ONE empty entry for new records
-    return [{ title: '', company: '', duration: '', description: '' }];
+    return [{ title: '', company: '', duration: '', description: '', company_url: '', location: ''}];
 };
 
 const initializeEducations = (educations?: EducationItem[]): EducationItem[] => {
@@ -105,6 +107,8 @@ const form = useForm<{
 });
 
 // Watch for currentAbout changes (post-submit refresh)
+// Removed watcher - let component handle array mutations
+// Only sync scalar fields
 watch(currentAbout, (newAbout) => {
     if (newAbout) {
         form.name = newAbout.name;
@@ -116,10 +120,9 @@ watch(currentAbout, (newAbout) => {
         form.content = newAbout.content;
         form.resume_url = newAbout.resume_url ?? '';
         form.status = newAbout.status ?? 'draft';
-        form.experiences = initializeExperiences(newAbout.experiences);
-        form.educations = initializeEducations(newAbout.educations);
+        // Don't override experiences/educations - let component manage
     }
-}, { immediate: true });
+});
 
 const submit = () => {
     if (currentAbout.value) {
@@ -184,7 +187,7 @@ const submit = () => {
                     <LoadingButton 
                         :loading="form.processing" 
                         :disabled="form.processing"
-                        class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                     >
                         <span class="flex items-center">

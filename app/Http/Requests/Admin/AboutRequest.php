@@ -32,6 +32,8 @@ class AboutRequest extends FormRequest
             'experiences' => ['nullable', 'array', 'max:5'],
             'experiences.*.title' => ['required_with:experiences.*', 'string', 'max:255'],
             'experiences.*.company' => ['required_with:experiences.*', 'string', 'max:255'],
+            'experiences.*.company_url' => ['required_with:experiences.*', 'url', 'max:255'],
+            'experiences.*.location' => ['required_with:experiences.*', 'string', 'max:255'],
             'experiences.*.duration' => ['required_with:experiences.*', 'string', 'max:100'],
             'experiences.*.description' => ['required_with:experiences.*', 'string', 'max:1000'],
             'educations' => ['nullable', 'array', 'max:4'],

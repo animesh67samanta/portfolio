@@ -10,7 +10,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
         <div class="w-full max-w-md">
             <div class="mb-6 flex justify-center">
                 <Link href="/">
-                    <ApplicationLogo class="h-16 w-16 fill-current text-emerald-600" />
+                    <ApplicationLogo class="h-20 w-auto fill-current text-indigo-400" />
                 </Link>
             </div>
 

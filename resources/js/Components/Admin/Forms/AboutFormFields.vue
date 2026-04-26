@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, toRefs, watch, onMounted } from 'vue';
+import { reactive, toRefs, watch, onMounted, nextTick } from 'vue';
 import FormField from '@/Components/FormField.vue';
 import ImageUploader from '@/Components/Admin/ImageUploader.vue';
 import { UserIcon, MapPinIcon, BriefcaseIcon, AcademicCapIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline';
@@ -9,6 +9,8 @@ interface ExperienceItem {
   company: string;
   duration: string;
   description: string;
+  company_url: string;
+  location: string;
 }
 
 interface EducationItem {
@@ -59,7 +61,9 @@ const addExperience = () => {
     title: '', 
     company: '', 
     duration: '', 
-    description: '' 
+    description: '' ,
+    company_url: '',
+    location: ''
   });
 };
 
@@ -86,7 +90,7 @@ const removeEducation = (index: number) => {
 // Ensure at least one entry always exists - called by parent if needed
 const ensureMinimumEntries = () => {
   if (experiences.value.length === 0) {
-    experiences.value.push({ title: '', company: '', duration: '', description: '' });
+    experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: ''});
   }
   if (educations.value.length === 0) {
     educations.value.push({ degree: '', institution: '', year: '', description: '' });
@@ -96,19 +100,25 @@ const ensureMinimumEntries = () => {
 watch(
   () => props.form,
   (newForm) => {
+    // Clear arrays first to avoid duplication
+    experiences.value = [];
+    educations.value = [];
     Object.assign(formLocal, newForm as FormData);
+    nextTick(() => ensureMinimumEntries());
   },
-  { deep: true }
+  { immediate: true, deep: true }
 );
 
+// Removed bidirectional sync that interferes with array mutations
 watch(
-  formLocal,
+  () => props.form,
   (newForm) => {
-    Object.assign(props.form, newForm as FormData);
-    // Ensure minimum entries after sync
-    ensureMinimumEntries();
+    experiences.value = [];
+    educations.value = [];
+    Object.assign(formLocal, newForm as FormData);
+    nextTick(() => ensureMinimumEntries());
   },
-  { deep: true }
+  { immediate: true }
 );
 
 // Auto ensure minimum on mount
@@ -127,7 +137,7 @@ onMounted(() => {
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
-              <UserIcon class="h-5 w-5 text-indigo-600" />
+              <UserIcon class="h-5 w-5 text-indigo-400" />
             </div>
             <h3 class="text-lg font-semibold text-gray-900">Personal Information</h3>
           </div>
@@ -151,7 +161,7 @@ onMounted(() => {
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
-              <MapPinIcon class="h-5 w-5 text-indigo-600" />
+              <MapPinIcon class="h-5 w-5 text-indigo-400" />
             </div>
             <h3 class="text-lg font-semibold text-gray-900">Address</h3>
           </div>
@@ -169,7 +179,7 @@ onMounted(() => {
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
-              <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
               </svg>
             </div>
@@ -191,7 +201,7 @@ onMounted(() => {
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <div class="p-2 rounded-lg bg-indigo-100">
-                <BriefcaseIcon class="h-5 w-5 text-indigo-600" />
+                <BriefcaseIcon class="h-5 w-5 text-indigo-400" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Experiences</h3>
             </div>
@@ -237,16 +247,38 @@ onMounted(() => {
                   />
                 </div>
               </div>
-              
-              <div class="mt-3">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-                <input 
-                  v-model="exp.duration" 
-                  type="text" 
-                  placeholder="e.g., 2020-Present" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                />
+              <div class="grid md:grid-cols-2 gap-4">
+                
+                <div class="mt-3">
+                  <label for="company_url" class="">Company Url</label>
+                  <input 
+                    v-model="exp.company_url" 
+                    type="text" 
+                    placeholder="e.g., https://example.com" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  />
+                </div>
+                <div class="mt-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                  <input 
+                    v-model="exp.duration" 
+                    type="text" 
+                    placeholder="e.g., 2020-Present" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  />
+                </div>
+                <div class="mt-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                  <input 
+                    v-model="exp.location" 
+                    type="text" 
+                    placeholder="e.g., ghatal, West Wedinipur, India" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  />
+                </div>
+
               </div>
+              
               
               <div class="mt-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -262,10 +294,10 @@ onMounted(() => {
           
           <button 
             @click="addExperience" 
-            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm"
+            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-400 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm"
           >
             <PlusIcon class="h-4 w-4" />
-            Add Experience Entry
+            Add Experience
           </button>
         </section>
 
@@ -274,7 +306,7 @@ onMounted(() => {
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <div class="p-2 rounded-lg bg-indigo-100">
-                <AcademicCapIcon class="h-5 w-5 text-indigo-600" />
+                <AcademicCapIcon class="h-5 w-5 text-indigo-400" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Education</h3>
             </div>
@@ -348,7 +380,7 @@ onMounted(() => {
             class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm"
           >
             <PlusIcon class="h-4 w-4" />
-            Add Education Entry
+            Add Education
           </button>
         </section>
       </div>
@@ -359,7 +391,7 @@ onMounted(() => {
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
-              <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
@@ -367,7 +399,7 @@ onMounted(() => {
           </div>
           <div class="space-y-4">
             <div v-if="about?.photo_path" class="text-center">
-              <img :src="about.photo_path_url || `/${about.photo_path}`" alt="Current photo" class="h-28 w-28 rounded-full object-cover mx-auto ring-4 ring-indigo-600 ring-offset-2 shadow-lg" />
+              <img :src="about.photo_path_url || `/${about.photo_path}`" alt="Current photo" class="h-28 w-28 rounded-full object-cover mx-auto ring-4 ring-indigo-400 ring-offset-2 shadow-lg" />
               <p class="text-xs text-gray-500 mt-2">Current photo</p>
             </div>
             <ImageUploader v-model="photo_path" folder="abouts" />
@@ -378,7 +410,7 @@ onMounted(() => {
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
-              <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
@@ -396,7 +428,7 @@ onMounted(() => {
                 type="radio" 
                 v-model="status" 
                 :value="option.value" 
-                class="h-4 w-4 rounded text-indigo-600 border-gray-300 focus:ring-indigo-500" 
+                class="h-4 w-4 rounded text-indigo-400 border-gray-300 focus:ring-indigo-500" 
               />
               <div>
                 <span class="font-medium text-gray-900">{{ option.label }}</span>

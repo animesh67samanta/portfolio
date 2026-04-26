@@ -57,7 +57,7 @@ const getRatingText = (rating: number | null) => {
                                 <div class="relative inline-block">
                                     <img :src="props.form.avatar_path.startsWith('http') ? props.form.avatar_path : `/` + props.form.avatar_path"
                                         alt="Current avatar"
-                                        class="mx-auto h-24 w-24 rounded-xl object-cover ring-2 ring-indigo-600 ring-offset-2 shadow-lg" />
+                                        class="mx-auto h-24 w-24 rounded-xl object-cover ring-2 ring-indigo-400 ring-offset-2 shadow-lg" />
                                     <div
                                         class="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50 opacity-0 transition-opacity hover:opacity-100">
                                         <span class="text-xs text-white">Current</span>
@@ -154,11 +154,11 @@ const getRatingText = (rating: number | null) => {
                                     class="relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-3 transition-all"
                                     :class="[
                                         props.form.status === option.value
-                                            ? 'border-indigo-600 bg-indigo-50'
+                                            ? 'border-indigo-400 bg-indigo-50'
                                             : 'border-gray-200 bg-white hover:border-gray-300'
                                     ]">
                                     <input type="radio" :value="option.value" v-model="props.form.status"
-                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500" />
+                                        class="h-4 w-4 text-indigo-400 focus:ring-indigo-500" />
                                     <div>
                                         <span class="font-medium text-gray-900">{{ option.label }}</span>
                                         <p class="text-xs text-gray-500">

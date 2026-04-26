@@ -17,7 +17,7 @@ const props = defineProps<{
 }>();
 
 const getImageUrl = (path: string | null) => {
-    if (!path) return null;
+    if (!path) return '/uploads/No_Image_Available.jpg';
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage')) return path;
     return `/${path.replace(/^\/?storage\/?/, '')}`;
@@ -58,7 +58,7 @@ const proficiencyColor = computed(() => {
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <CodeBracketIcon class="h-5 w-5 text-indigo-600" />
+                            <CodeBracketIcon class="h-5 w-5 text-indigo-400" />
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">Basic Information</h3>
                     </div>
@@ -94,7 +94,7 @@ const proficiencyColor = computed(() => {
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <ArrowTrendingUpIcon class="h-5 w-5 text-indigo-600" />
+                            <ArrowTrendingUpIcon class="h-5 w-5 text-indigo-400" />
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">Proficiency Level</h3>
                     </div>
@@ -142,7 +142,7 @@ const proficiencyColor = computed(() => {
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <PhotoIcon class="h-5 w-5 text-indigo-600" />
+                            <PhotoIcon class="h-5 w-5 text-indigo-400" />
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">Skill Icon</h3>
                     </div>
@@ -156,7 +156,7 @@ const proficiencyColor = computed(() => {
 :src="getImageUrl(form.icon) || ''" 
 
                                         :alt="form.name || 'Skill icon'"
-                                        class="mx-auto h-24 w-24 rounded-xl object-cover ring-2 ring-indigo-600 ring-offset-2 shadow-lg"
+                                        class="mx-auto h-24 w-24 rounded-xl object-cover ring-2 ring-indigo-400 ring-offset-2 shadow-lg"
                                     />
                                     <div class="absolute inset-0 flex items-center justify-center rounded-xl bg-black/50 opacity-0 transition-opacity hover:opacity-100">
                                         <span class="text-xs text-white">Current</span>
@@ -184,7 +184,7 @@ const proficiencyColor = computed(() => {
                 <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="rounded-lg bg-indigo-100 p-2">
-                            <AdjustmentsHorizontalIcon class="h-5 w-5 text-indigo-600" />
+                            <AdjustmentsHorizontalIcon class="h-5 w-5 text-indigo-400" />
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">Settings</h3>
                     </div>
@@ -198,7 +198,7 @@ const proficiencyColor = computed(() => {
                                     class="flex cursor-pointer items-center gap-3 rounded-lg border-2 p-3 transition-all"
                                     :class="[
                                         form.status === option.value
-                                            ? 'border-indigo-600 bg-indigo-50'
+                                            ? 'border-indigo-400 bg-indigo-50'
                                             : 'border-gray-200 bg-white hover:border-gray-300'
                                     ]"
                                 >
@@ -206,7 +206,7 @@ const proficiencyColor = computed(() => {
                                         type="radio"
                                         :value="option.value"
                                         v-model="form.status"
-                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                        class="h-4 w-4 text-indigo-400 focus:ring-indigo-500"
                                     />
                                     <div>
                                         <span class="font-medium text-gray-900">{{ option.label }}</span>

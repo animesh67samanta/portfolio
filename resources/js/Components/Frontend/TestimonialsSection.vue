@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import { ChatBubbleLeftRightIcon } from '@heroicons/vue/24/outline'
 
 type Testimonial = {
     id: number;
@@ -7,30 +8,47 @@ type Testimonial = {
     client_role: string | null;
     company: string | null;
     quote: string;
-    image?: string;
+    avatar_path?: string | null;
+    rating: number | null;
+
 };
 
 const props = defineProps<{
     testimonials: Testimonial[];
 }>();
 
+const itemsPerPage = 3
 const currentIndex = ref(0)
 let interval: any = null
 
+const totalPages = computed(() =>
+    Math.max(1, Math.ceil(props.testimonials.length / itemsPerPage))
+)
+
+const startIndex = computed(() => currentIndex.value * itemsPerPage)
+
 const nextSlide = () => {
-    currentIndex.value =
-        (currentIndex.value + 1) % props.testimonials.length
+    if (props.testimonials.length <= itemsPerPage) return
+    currentIndex.value = (currentIndex.value + 1) % totalPages.value
 }
 
 const prevSlide = () => {
+    if (props.testimonials.length <= itemsPerPage) return
     currentIndex.value =
-        (currentIndex.value - 1 + props.testimonials.length) %
-        props.testimonials.length
+        (currentIndex.value - 1 + totalPages.value) % totalPages.value
 }
+
+const imageUrl = (path?: string | null) => {
+    if (!path) return '/uploads/No_Image_Available.jpg';
+    if (path.startsWith('http')) return path;
+    return `/${path}`;
+};
 
 // Auto slide
 onMounted(() => {
-    interval = setInterval(nextSlide, 4000)
+    if (props.testimonials.length > itemsPerPage) {
+        interval = setInterval(nextSlide, 4000)
+    }
 })
 
 onBeforeUnmount(() => {
@@ -39,80 +57,63 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <section id="testimonials" class="mt-24">
-        <div class="text-center mb-12">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">
+    <section id="testimonials" class="py-24 bg-[#f8f8f8] mt-10 text-center max-w-8xl mx-auto">
+
+        <!-- HEADER -->
+        <div class="max-w-6xl mx-auto px-6 mb-16">
+            <p class="text-xs tracking-[0.25em] text-indigo-400 uppercase">
                 Testimonials
             </p>
-            <h2 class="mt-2 text-3xl font-bold text-white">
-                What Clients Say
+            <h2 class="mt-3 text-4xl font-bold text-slate-900">
+                What client says about?
             </h2>
         </div>
 
-        <div
-            v-if="testimonials.length"
-            class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 md:p-12 shadow-xl"
-        >
-            <div class="grid items-center gap-8 md:grid-cols-2 transition-all duration-500">
+        <!-- CARDS -->
+        <div class="max-w-6xl mx-auto px-6 grid gap-6 md:grid-cols-3">
 
-                <!-- Image -->
-                <div class="flex justify-center md:justify-start">
+            <div
+                v-for="t in testimonials.slice(startIndex, startIndex + itemsPerPage)"
+                :key="t.id"
+                class="bg-white p-6 rounded-xl shadow-md text-left flex flex-col h-full transition hover:-translate-y-1 hover:shadow-xl"
+            >
+            <ChatBubbleLeftRightIcon class="h-6 w-6 text-[#a3a17e] mb-3" />
+                <!-- QUOTE -->
+                <p class="text-slate-600 leading-relaxed min-h-[120px]">
+                    "{{ t.quote }}"
+                </p>
+
+                <!-- USER -->
+                <div class="flex items-center gap-4 mt-auto pt-6">
                     <img
-                        :src="testimonials[currentIndex].image || 'https://via.placeholder.com/300'"
-                        class="h-64 w-64 rounded-2xl object-cover shadow-lg transition-all duration-500"
+                        :src="imageUrl(t.avatar_path)"
+                        class="h-12 w-12 rounded-full object-cover flex-shrink-0"
                     />
-                </div>
 
-                <!-- Content -->
-                <div class="text-white">
-                    <p class="text-lg leading-8 text-slate-300 transition-all duration-500">
-                        "{{ testimonials[currentIndex].quote }}"
-                    </p>
-
-                    <div class="mt-6">
-                        <p class="text-lg font-semibold">
-                            {{ testimonials[currentIndex].client_name }}
+                    <div>
+                        <p class="font-semibold text-slate-900">
+                            {{ t.client_name }}
                         </p>
-                        <p class="text-sm text-slate-400">
-                            {{ testimonials[currentIndex].client_role || 'Client' }}
-                            <span v-if="testimonials[currentIndex].company">
-                                , {{ testimonials[currentIndex].company }}
-                            </span>
+                        <p class="text-sm text-slate-500">
+                            {{ t.client_role }}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Decorative Quote -->
-            <div class="absolute top-6 right-10 text-6xl text-slate-700 opacity-20">
-                “
-            </div>
-
-            <!-- Controls -->
-            <button
-                @click="prevSlide"
-                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-            >
-                ‹
-            </button>
-
-            <button
-                @click="nextSlide"
-                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-            >
-                ›
-            </button>
-
-            <!-- Dots -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                <span
-                    v-for="(t, index) in testimonials"
-                    :key="t.id"
-                    @click="currentIndex = index"
-                    class="h-2 w-2 rounded-full cursor-pointer"
-                    :class="index === currentIndex ? 'bg-white' : 'bg-white/40'"
-                />
-            </div>
         </div>
+
+        <!-- DOTS -->
+        <div v-if="totalPages > 1" class="mt-8 flex justify-center gap-2">
+            <span
+                v-for="page in totalPages"
+                :key="page"
+                @click="currentIndex = page - 1"
+                class="h-2 w-2 rounded-full cursor-pointer"
+                :class="(page - 1) === currentIndex ? 'bg-white' : 'bg-white/40'"
+            />
+        </div>
+
     </section>
 </template>
+

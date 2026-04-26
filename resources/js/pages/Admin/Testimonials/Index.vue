@@ -200,7 +200,7 @@ const getStatusColor = (status: string) => {
 
 // Get avatar URL
 const getAvatarUrl = (path: string | null | undefined) => {
-    if (!path) return undefined;
+    if (!path) return '/uploads/No_Image_Available.jpg';
     if (path.startsWith('http')) return path;
     if (path.startsWith('/storage')) return path;
     return `/${path.replace(/^\/?storage\/?/, '')}`;
@@ -245,7 +245,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                 </div>
                 <button
                     @click="openCreate"
-                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-600 hover:shadow-lg active:scale-95"
+                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-400 hover:shadow-lg active:scale-95"
                 >
                     <PlusIcon class="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
                     <span>Add Testimonial</span>
@@ -260,7 +260,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                         <p class="mt-1 text-sm text-gray-500">Client feedback and reviews</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-600">
+                        <span class="rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-400">
                             {{ props.testimonials.data.length }} items
                         </span>
                     </div>
@@ -294,7 +294,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                                                 :alt="testimonial.client_name"
                                                 class="h-full w-full object-cover"
                                             />
-                                            <div v-else class="flex h-full w-full items-center justify-center bg-indigo-100 text-indigo-600">
+                                            <div v-else class="flex h-full w-full items-center justify-center bg-indigo-100 text-indigo-400">
                                                 {{ testimonial.client_name.charAt(0) }}
                                             </div>
                                         </div>
@@ -326,7 +326,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                                         <button
                                             type="button"
                                             @click="openEdit(testimonial)"
-                                            class="rounded-lg p-2 text-indigo-600 transition-colors hover:bg-indigo-50"
+                                            class="rounded-lg p-2 text-indigo-400 transition-colors hover:bg-indigo-50"
                                             title="Edit"
                                         >
                                             <PencilIcon class="h-4 w-4" />
@@ -373,7 +373,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                                         :alt="testimonial.client_name"
                                         class="h-full w-full object-cover"
                                     />
-                                    <div v-else class="flex h-full w-full items-center justify-center bg-indigo-100 text-indigo-600">
+                                    <div v-else class="flex h-full w-full items-center justify-center bg-indigo-100 text-indigo-400">
                                         {{ testimonial.client_name.charAt(0) }}
                                     </div>
                                 </div>
@@ -383,7 +383,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                                 </div>
                             </div>
                             <div class="flex gap-1">
-                                <button @click="openEdit(testimonial)" class="rounded-lg p-2 text-indigo-600">
+                                <button @click="openEdit(testimonial)" class="rounded-lg p-2 text-indigo-400">
                                     <PencilIcon class="h-4 w-4" />
                                 </button>
                                 <button @click="openDelete(testimonial)" class="rounded-lg p-2 text-red-600">
@@ -450,7 +450,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                         <LoadingButton 
                             :loading="createForm.processing" 
                             :disabled="createForm.processing"
-                            class="group rounded-xl bg-indigo-600/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">
@@ -501,7 +501,7 @@ const getAvatarUrl = (path: string | null | undefined) => {
                         <LoadingButton 
                             :loading="editForm.processing" 
                             :disabled="editForm.processing"
-                            class="bg-indigo-600 hover:bg-indigo-700"
+                            class="bg-indigo-400 hover:bg-indigo-700"
                         >
                             Save Changes
                         </LoadingButton>

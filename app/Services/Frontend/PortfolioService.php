@@ -50,6 +50,8 @@ class PortfolioService
                     ])
                     ->values()
                     ->all(),
+                'experiences' => About::published()->first()?->experiences ?? [],
+                'educations' => About::published()->first()?->educations ?? [],
                 'skills' => Skill::published()
                     ->orderBy('name')
                     ->limit(12)
@@ -70,6 +72,7 @@ class PortfolioService
                         'client_role',
                         'company',
                         'quote',
+                        'avatar_path',
                         'rating',
                     ])
                     ->values()
@@ -93,6 +96,13 @@ class PortfolioService
                         'content',
                         'photo_path',
                         'resume_url',
+                        'status',
+                        'name',
+                        'email',
+                        'mobile',
+                        'current_address',
+                        'permanent_address',
+                        
                     ])
                     ?->toArray(),
             ];

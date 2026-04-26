@@ -10,7 +10,9 @@ const pages = import.meta.glob<DefineComponent>('./Pages/**/*.vue');
 const pagesLowercase = import.meta.glob<DefineComponent>('./pages/**/*.vue');
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    // title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title}  ${appName}`,
+
     resolve: (name) => {
         const page =
             pages[`./Pages/${name}.vue`] ??
