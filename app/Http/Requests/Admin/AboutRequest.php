@@ -26,7 +26,7 @@ class AboutRequest extends FormRequest
             'permanent_address' => ['nullable', 'string'],
             'heading' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'photo_path' => [$photoRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'photo_path' => [$photoRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:8048'],
             'resume_url' => ['nullable', 'url', 'max:255'],
             'status' => ['required', 'in:draft,published,archived'],
             'experiences' => ['nullable', 'array', 'max:5'],

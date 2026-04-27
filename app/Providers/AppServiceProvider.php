@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if (app()->environment('production')) {
             URL::forceScheme('https');
+        }elseif (app()->environment('local')) {
+            URL::forceScheme('http');
         }
         Gate::define('accessAdmin', fn (User $user): bool => $user->is_admin);
 

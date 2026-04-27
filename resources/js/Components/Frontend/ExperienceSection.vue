@@ -14,56 +14,78 @@ defineProps<{
 </script>
 
 <template>
-<section id="experience" class="mt-24 max-w-6xl mx-auto ">
-    <!-- Header -->
-        <div class="text-center mb-12">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">
-                Experience
-            </p>
-            <h2 class="mt-2 text-3xl font-bold text-black">
-                My Work Experience
-            </h2>
-        </div>
-    <!-- <div class="mb-12">
-        <h2 class="text-4xl font-bold text-slate-900">Experience</h2>
-        <div class="mt-4 h-[1px] bg-slate-300"></div>
-    </div> -->
+    <section id="experience" class="py-10 mt-12 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
-    <!-- Timeline -->
-    <div class="relative">
-        <!-- vertical line -->
-        <div class="absolute left-1/2 top-0 h-full w-[1px] bg-slate-300"></div>
-
-        <div
-            v-for="(exp, index) in experiences"
-            :key="index"
-            class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-start"
-        >
-            <!-- LEFT -->
-            <div class="text-right pr-8">
-                <h3 class="text-3xl font-bold text-[#a3a17e]">
-                    {{ exp.duration }}
-                </h3>
-                <p class="text-sm text-slate-600 mt-1">
-                    {{ exp.title }}
+            <!-- HEADER -->
+            <div class="text-center mb-12">
+                <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">
+                    Experience
                 </p>
+                <h2 class="mt-3 text-3xl font-bold uppercase tracking-[0.25em] text-slate-900">
+                    My Work Experience
+                </h2>
             </div>
 
-            <!-- CENTER DOT -->
-            <div class="relative flex justify-center">
-                <span class="h-4 w-4 rounded-full border-2 bg-indigo-600 border-black"></span>
-            </div>
+            <!-- TIMELINE -->
+            <div class="relative">
 
-            <!-- RIGHT -->
-            <div class="pl-8">
-                <h4 class="font-semibold text-[#a3a17e]">
-                    {{ exp.company }}
-                </h4>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    {{ exp.description }}
-                </p>
+                <!-- LEFT LINE -->
+                <div class="absolute left-3 top-0 h-full w-[2px] bg-gradient-to-b from-indigo-500 via-slate-200 to-transparent"></div>
+
+                <div class="space-y-10">
+
+                    <div
+                    v-for="(exp, index) in experiences"
+                    :key="index"
+                    class="relative flex gap-6"
+                    >
+                        <!-- DOT -->
+                        <div class="relative z-10">
+                            <div class="w-6 h-6 rounded-full bg-indigo-500 ring-4 ring-white shadow-md"></div>
+                        </div>
+
+                        <!-- CARD -->
+                        <div class="flex-1">
+                            <div class="group bg-black/10 backdrop-blur-md border border-slate-200 rounded-2xl p-6 shadow-sm transition hover:shadow-xl hover:-translate-y-1">
+
+                                <!-- TOP -->
+                                <div class="flex flex-wrap justify-between items-center gap-2">
+
+                                    <h3 class="text-lg md:text-xl font-bold text-slate-900">
+                                    {{ exp.title }}
+                                    </h3>
+
+                                    <span class="text-xs md:text-sm bg-indigo-50 text-indigo-500 px-3 py-1 rounded-full font-medium">
+                                    {{ exp.duration }}
+                                    </span>
+
+                                </div>
+
+                                <!-- COMPANY -->
+                                <p class="mt-1 text-sm text-indigo-500 font-semibold">
+                                    {{ exp.company }} • {{ exp.location }}
+                                </p>
+
+                                <!-- DESCRIPTION -->
+                                <p class="mt-3 text-sm text-slate-600 leading-relaxed">
+                                    {{ exp.description }}
+                                </p>
+
+                                <!-- LINK -->
+                                <a
+                                    v-if="exp.company_url"
+                                    :href="exp.company_url"
+                                    target="_blank"
+                                    class="inline-flex items-center gap-1 mt-4 text-sm text-indigo-500 hover:text-indigo-800 font-medium"
+                                >
+                                    Visit Company →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 </template>

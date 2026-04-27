@@ -21,10 +21,10 @@ class BlogService
     public function create(array $data): Blog
     {
         $data['slug'] = Str::slug($data['slug'] ?: $data['title']);
-        $data['featured_image'] = $this->imageService->storeImage($data['featured_image'], 'blogs');
+        $data['featured_image'] = $this->imageService->storeImage($data['featured_image'], 'blogs', 1200, 630);
 
         if (isset($data['cover_image'])) {
-            $data['cover_image'] = $this->imageService->storeImage($data['cover_image'], 'blogs');
+            $data['cover_image'] = $this->imageService->storeImage($data['cover_image'], 'blogs', 1920, 1080);
         }
 
         return Blog::query()->create($data);
@@ -36,7 +36,7 @@ class BlogService
 
         if (array_key_exists('featured_image', $data) && $data['featured_image'] instanceof \Illuminate\Http\UploadedFile) {
             $this->imageService->deleteImage($blog->featured_image);
-            $data['featured_image'] = $this->imageService->storeImage($data['featured_image'], 'blogs');
+            $data['featured_image'] = $this->imageService->storeImage($data['featured_image'], 'blogs', 1200, 630);
         } elseif (array_key_exists('featured_image', $data) && is_null($data['featured_image'])) {
             // $this->imageService->deleteImage($blog->featured_image);
             unset($data['featured_image']);
@@ -46,7 +46,7 @@ class BlogService
 
         if (array_key_exists('cover_image', $data) && $data['cover_image'] instanceof \Illuminate\Http\UploadedFile) {
             $this->imageService->deleteImage($blog->cover_image);
-            $data['cover_image'] = $this->imageService->storeImage($data['cover_image'], 'blogs');
+            $data['cover_image'] = $this->imageService->storeImage($data['cover_image'], 'blogs', 1920, 1080);
         } elseif (array_key_exists('cover_image', $data) && is_null($data['cover_image'])) {
             // $this->imageService->deleteImage($blog->cover_image);
             unset($data['cover_image']);

@@ -219,30 +219,6 @@ const getProficiencyColor = (proficiency: number | null) => {
     <Head title="Skills" />
 
     <AdminLayout page-title="Skills">
-        <!-- Notification Toast -->
-        <Transition
-            enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 translate-x-full"
-            enter-to-class="opacity-100 translate-x-0"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-x-0"
-            leave-to-class="opacity-0 translate-x-full"
-        >
-            <div
-                v-if="notification.show"
-                :class="[
-                    'fixed top-20 right-4 z-50 rounded-lg p-4 shadow-lg',
-                    notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-                ]"
-            >
-                <div class="flex items-center gap-3">
-                    <div class="flex-1">{{ notification.message }}</div>
-                    <button @click="notification.show = false" class="text-gray-400 hover:text-gray-600">
-                        <XMarkIcon class="h-5 w-5" />
-                    </button>
-                </div>
-            </div>
-        </Transition>
 
         <div class="space-y-6">
             <!-- Header with Create Button -->

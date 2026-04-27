@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Image\Enums\Fit;
+use Spatie\Image\Enums\ImageDriver;
+use Spatie\Image\Image;
 
 class AboutController extends Controller
 {
@@ -76,10 +79,40 @@ class AboutController extends Controller
 
         $extension = $file->getClientOriginalExtension() ?: 'jpg';
         $filename = Str::uuid()->toString().'.'.$extension;
+        $absolutePath = "{$absoluteDir}/{$filename}";
 
         $file->move($absoluteDir, $filename);
 
+        $this->resizeImage($absolutePath);
+
         return "{$relativeDir}/{$filename}";
+    }
+
+    private function resizeImage(string $absolutePath): void
+    {
+        try {
+            Image::useImageDriver(ImageDriver::Vips)
+                ->loadFile($absolutePath)
+                ->fit(Fit::Contain, 1200, 1200)
+                ->quality(85)
+                ->save();
+        } catch (\Throwable $vipsException) {
+            // Fallback to Imagick if Vips (libvips) is not available
+            try {
+                Image::useImageDriver(ImageDriver::Imagick)
+                    ->loadFile($absolutePath)
+                    ->fit(Fit::Contain, 1200, 1200)
+                    ->quality(85)
+                    ->save();
+            } catch (\Throwable $imagickException) {
+                // Final fallback to GD
+                Image::useImageDriver(ImageDriver::Gd)
+                    ->loadFile($absolutePath)
+                    ->fit(Fit::Contain, 1200, 1200)
+                    ->quality(85)
+                    ->save();
+            }
+        }
     }
 
     private function deletePublicPath(?string $relativePath): void

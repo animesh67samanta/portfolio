@@ -187,7 +187,7 @@ const submit = () => {
                     <LoadingButton 
                         :loading="form.processing" 
                         :disabled="form.processing"
-                        class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="group rounded-xl bg-indigo-500/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-700/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                     >
                         <span class="flex items-center">

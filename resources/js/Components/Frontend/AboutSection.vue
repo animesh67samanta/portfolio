@@ -16,8 +16,20 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-    <section id="about" class="py-20 bg-[#f8f8f8] max-w-8xl mx-auto mt-3">
-        <div class="mx-auto grid md:grid-cols-2 gap-12 max-w-5xl bg-white rounded-3xl items-center px-6 py-6">
+    <section id="about" class="py-10 bg-white max-w-8xl mx-auto mt-3">
+        <!-- HEADER -->
+        <div class="text-center mb-10">
+            <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">
+                About Me
+            </p>
+            <h2 class="mt-3 text-3xl font-bold uppercase text-slate-900 tracking-[0.25em] ">
+                <!-- My Introduction -->
+                  My Intro
+            </h2>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="mx-auto grid md:grid-cols-2 gap-4 max-w-5xl bg-[#f8f8f8] rounded-2xl items-center px-6 py-6">
 
             <!-- IMAGE -->
             <div class="relative">
@@ -25,19 +37,19 @@ const props = withDefaults(defineProps<{
                     v-if="imageUrl"
                     :src="imageUrl"
                     alt="About"
-                    class="w-full h-[500px] object-cover"
+                    class="w-full h-64 sm:h-96 md:h-[500px] object-cover"
                 />
             </div>
 
             <!-- CONTENT -->
             <div>
                 <!-- SMALL TITLE -->
-                <p class="text-xs tracking-[0.25em] text-[#a3a17e] uppercase">
+                <!-- <p class="text-xs tracking-[0.25em] text-[#a3a17e] uppercase">
                     My Intro
-                </p>
+                </p> -->
 
                 <!-- HEADING -->
-                <h2 class="mt-3 text-4xl font-bold text-slate-900">
+                <h2 class="mt-3 text-3xl md:text-4xl font-bold text-[#a3a17e]">
                     {{ heading }}
                 </h2>
 

@@ -79,14 +79,19 @@ class PortfolioService
                     ->all(),
                 'recent_blogs' => Blog::published()
                     ->latest()
-                    ->take(3)
                     ->get([
                         'id',
                         'title',
                         'slug',
                         'excerpt',
+                        'content',
+                        'excerpt',
                         'featured_image',
+                        'cover_image',
+                        'created_at',
                         'published_at',
+                        'status',
+                        'views_count',
                     ])
                     ->values()
                     ->all(),

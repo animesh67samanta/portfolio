@@ -228,31 +228,7 @@ const getStatusInfo = (status: string) => {
     <Head title="Banners" />
 
     <AdminLayout page-title="Banners">
-        <!-- Notification Toast -->
-        <Transition
-            enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 translate-x-full"
-            enter-to-class="opacity-100 translate-x-0"
-            leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-x-0"
-            leave-to-class="opacity-0 translate-x-full"
-        >
-            <div
-                v-if="notification.show"
-                :class="[
-                    'fixed top-20 right-4 z-50 rounded-lg p-4 shadow-lg',
-                    notification.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-                ]"
-            >
-                <div class="flex items-center gap-3">
-                    <div class="flex-1">{{ notification.message }}</div>
-                    <button @click="notification.show = false" class="text-gray-400 hover:text-gray-600">
-                        <XMarkIcon class="h-5 w-5" />
-                    </button>
-                </div>
-            </div>
-        </Transition>
-
+       
         <div class="space-y-6">
             <!-- Header with Create Button -->
             <div class="flex flex-wrap items-center justify-between gap-4">
@@ -262,7 +238,7 @@ const getStatusInfo = (status: string) => {
                 </div>
                 <button
                     @click="openCreate"
-                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-6 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-300 hover:from-indigo-700 hover:to-indigo-400 hover:shadow-lg active:scale-95"
+                    class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-indigo-500 to-indigo-700 px-6 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:from-indigo-700 hover:to-indigo-500 hover:shadow-lg active:scale-95"
                 >
                     <PlusIcon class="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
                     <span>Create Banner</span>
@@ -289,7 +265,7 @@ const getStatusInfo = (status: string) => {
                             <div class="absolute top-3 right-3 flex gap-2">
                                 <button
                                     @click="openEdit(banner)"
-                                    class="rounded-lg bg-white/90 p-2 text-indigo-400 backdrop-blur-sm transition-all hover:bg-indigo-400 hover:text-white"
+                                    class="rounded-lg bg-white/90 p-2 text-indigo-500 backdrop-blur-sm transition-all hover:bg-indigo-800 hover:text-white"
                                     title="Edit"
                                 >
                                     <PencilIcon class="h-4 w-4" />
@@ -326,7 +302,7 @@ const getStatusInfo = (status: string) => {
                                 <a 
                                     :href="banner.cta_url || '#'" 
                                     target="_blank"
-                                    class="inline-flex items-center gap-1 text-sm font-medium text-indigo-400 hover:text-indigo-700"
+                                    class="inline-flex items-center gap-1 text-sm font-medium text-indigo-500 hover:text-indigo-700"
                                 >
                                     {{ banner.cta_text }}
                                     <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,7 +321,7 @@ const getStatusInfo = (status: string) => {
                             <p class="mt-2 text-sm text-gray-500">Get started by creating your first banner</p>
                             <button
                                 @click="openCreate"
-                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-400 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                                class="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-800"
                             >
                                 <PlusIcon class="h-4 w-4" />
                                 Create Banner
@@ -391,7 +367,7 @@ const getStatusInfo = (status: string) => {
                         <LoadingButton 
                             :loading="createForm.processing" 
                             :disabled="createForm.processing"
-                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-500/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-700/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">
@@ -432,7 +408,7 @@ const getStatusInfo = (status: string) => {
                     <div class="mt-6 flex justify-end gap-3">
                         <button
                             type="button"
-                            @click="closeCreate"
+                            @click="closeEdit"
                             class="group inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <svg class="h-4 w-4 text-gray-500 transition-all duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,7 +420,7 @@ const getStatusInfo = (status: string) => {
                         <LoadingButton 
                             :loading="editForm.processing" 
                             :disabled="editForm.processing"
-                            class="group rounded-xl bg-indigo-400/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="group rounded-xl bg-indigo-500/90 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-indigo-800 hover:shadow-lg hover:shadow-indigo-800/30 hover:backdrop-blur-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             style="box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);"
                         >
                             <span class="flex items-center">

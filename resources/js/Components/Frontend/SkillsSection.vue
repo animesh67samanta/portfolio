@@ -24,10 +24,10 @@ const getColor = (value: number | null) => {
 </script>
 
 <template>
-    <section id="skills" class="max-w-8xl bg-[#f8f8f8] py-24 mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8 text-center">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">Skills</p>
-            <h2 class="mt-2 text-3xl font-bold text-slate-900">My Skills</h2>
+    <section id="skills" class="max-w-8xl bg-[#f8f8f8] mt-12 py-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-10 text-center">
+            <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">Skills</p>
+            <h2 class="mt-2 text-3xl font-bold uppercase tracking-[0.25em] text-slate-900">My Skills</h2>
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto py-3">
             <div

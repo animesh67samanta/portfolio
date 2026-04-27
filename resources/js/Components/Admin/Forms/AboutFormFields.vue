@@ -55,42 +55,25 @@ const props = withDefaults(defineProps<Props>(), {
 const formLocal = reactive({...props.form});
 const { name, email, mobile, current_address, permanent_address, heading, content, photo_path, resume_url, status, experiences, educations, errors } = toRefs(formLocal);
 
-// Add new experience entry
 const addExperience = () => {
-  experiences.value.push({ 
-    title: '', 
-    company: '', 
-    duration: '', 
-    description: '' ,
-    company_url: '',
-    location: ''
-  });
+  experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
 };
 
-// Remove experience entry
 const removeExperience = (index: number) => {
   experiences.value.splice(index, 1);
 };
 
-// Add new education entry
 const addEducation = () => {
-  educations.value.push({ 
-    degree: '', 
-    institution: '', 
-    year: '', 
-    description: '' 
-  });
+  educations.value.push({ degree: '', institution: '', year: '', description: '' });
 };
 
-// Remove education entry
 const removeEducation = (index: number) => {
   educations.value.splice(index, 1);
 };
 
-// Ensure at least one entry always exists - called by parent if needed
 const ensureMinimumEntries = () => {
   if (experiences.value.length === 0) {
-    experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: ''});
+    experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
   }
   if (educations.value.length === 0) {
     educations.value.push({ degree: '', institution: '', year: '', description: '' });
@@ -100,7 +83,6 @@ const ensureMinimumEntries = () => {
 watch(
   () => props.form,
   (newForm) => {
-    // Clear arrays first to avoid duplication
     experiences.value = [];
     educations.value = [];
     Object.assign(formLocal, newForm as FormData);
@@ -109,23 +91,9 @@ watch(
   { immediate: true, deep: true }
 );
 
-// Removed bidirectional sync that interferes with array mutations
-watch(
-  () => props.form,
-  (newForm) => {
-    experiences.value = [];
-    educations.value = [];
-    Object.assign(formLocal, newForm as FormData);
-    nextTick(() => ensureMinimumEntries());
-  },
-  { immediate: true }
-);
-
-// Auto ensure minimum on mount
 onMounted(() => {
   ensureMinimumEntries();
 });
-
 </script>
 
 <template>
@@ -133,7 +101,7 @@ onMounted(() => {
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main content -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Personal Information Section -->
+        <!-- Personal Information -->
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
@@ -157,7 +125,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <!-- Address Section -->
+        <!-- Address -->
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
@@ -175,7 +143,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <!-- Content Section -->
+        <!-- Content -->
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center gap-2 mb-4">
             <div class="p-2 rounded-lg bg-indigo-100">
@@ -196,7 +164,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <!-- Experiences Section -->
+        <!-- Experiences -->
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
@@ -209,19 +177,10 @@ onMounted(() => {
           </div>
           
           <div class="space-y-4">
-            <div 
-              v-for="(exp, i) in experiences" 
-              :key="i" 
-              class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm"
-            >
+            <div v-for="(exp, i) in experiences" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
               <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
                 <h4 class="font-medium text-gray-700">Entry {{ i + 1 }}</h4>
-                <button 
-                  v-if="experiences.length > 1" 
-                  @click="removeExperience(i)" 
-                  type="button" 
-                  class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm"
-                >
+                <button v-if="experiences.length > 1" @click="removeExperience(i)" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
                   <TrashIcon class="h-4 w-4" />
                   Remove
                 </button>
@@ -230,83 +189,49 @@ onMounted(() => {
               <div class="grid md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                  <input 
-                    v-model="exp.title" 
-                    type="text" 
-                    placeholder="Job title" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
+                  <input v-model="exp.title" type="text" placeholder="Job title" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
-                  <input 
-                    v-model="exp.company" 
-                    type="text" 
-                    placeholder="Company name" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
+                  <input v-model="exp.company" type="text" placeholder="Company name" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
                 </div>
-              </div>
-              <div class="grid md:grid-cols-2 gap-4">
-                
-                <div class="mt-3">
-                  <label for="company_url" class="">Company Url</label>
-                  <input 
-                    v-model="exp.company_url" 
-                    type="text" 
-                    placeholder="e.g., https://example.com" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-                <div class="mt-3">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-                  <input 
-                    v-model="exp.duration" 
-                    type="text" 
-                    placeholder="e.g., 2020-Present" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-                <div class="mt-3">
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                  <input 
-                    v-model="exp.location" 
-                    type="text" 
-                    placeholder="e.g., ghatal, West Wedinipur, India" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-
               </div>
               
+              <div class="grid md:grid-cols-2 gap-4 mt-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Company URL</label>
+                  <input v-model="exp.company_url" type="text" placeholder="https://example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                  <input v-model="exp.duration" type="text" placeholder="e.g., 2020-Present" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+                </div>
+              </div>
+              
+              <div class="mt-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                <input v-model="exp.location" type="text" placeholder="e.g., ghatal, West Wedinipur, India" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+              </div>
               
               <div class="mt-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea 
-                  v-model="exp.description" 
-                  rows="3" 
-                  placeholder="Describe your responsibilities and achievements..." 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical"
-                />
+                <textarea v-model="exp.description" rows="3" placeholder="Describe your responsibilities and achievements..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" />
               </div>
             </div>
           </div>
           
-          <button 
-            @click="addExperience" 
-            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-400 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm"
-          >
+          <button @click="addExperience" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-700 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
             <PlusIcon class="h-4 w-4" />
             Add Experience
           </button>
         </section>
 
-        <!-- Education Section -->
+        <!-- Education -->
         <section class="p-6 rounded-lg bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <div class="p-2 rounded-lg bg-indigo-100">
-                <AcademicCapIcon class="h-5 w-5 text-indigo-400" />
+                <AcademicCapIcon class="h-5 w-5 text-indigo-500" />
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Education</h3>
             </div>
@@ -314,19 +239,10 @@ onMounted(() => {
           </div>
           
           <div class="space-y-4">
-            <div 
-              v-for="(edu, i) in educations" 
-              :key="i" 
-              class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm"
-            >
+            <div v-for="(edu, i) in educations" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
               <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
                 <h4 class="font-medium text-gray-700">Entry {{ i + 1 }}</h4>
-                <button 
-                  v-if="educations.length > 1" 
-                  @click="removeEducation(i)" 
-                  type="button" 
-                  class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm"
-                >
+                <button v-if="educations.length > 1" @click="removeEducation(i)" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
                   <TrashIcon class="h-4 w-4" />
                   Remove
                 </button>
@@ -335,50 +251,27 @@ onMounted(() => {
               <div class="grid md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Degree</label>
-                  <input 
-                    v-model="edu.degree" 
-                    type="text" 
-                    placeholder="e.g., B.Sc Computer Science" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
+                  <input v-model="edu.degree" type="text" placeholder="e.g., B.Sc Computer Science" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
-                  <input 
-                    v-model="edu.institution" 
-                    type="text" 
-                    placeholder="University Name" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  />
+                  <input v-model="edu.institution" type="text" placeholder="University Name" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
                 </div>
               </div>
               
               <div class="mt-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
-                <input 
-                  v-model="edu.year" 
-                  type="text" 
-                  placeholder="e.g., 2024" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                />
+                <input v-model="edu.year" type="text" placeholder="e.g., 2024" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
               </div>
               
               <div class="mt-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea 
-                  v-model="edu.description" 
-                  rows="3" 
-                  placeholder="Describe your studies, achievements, etc..." 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical"
-                />
+                <textarea v-model="edu.description" rows="3" placeholder="Describe your studies, achievements, etc..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" />
               </div>
             </div>
           </div>
           
-          <button 
-            @click="addEducation" 
-            class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm"
-          >
+          <button @click="addEducation" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
             <PlusIcon class="h-4 w-4" />
             Add Education
           </button>
@@ -402,7 +295,11 @@ onMounted(() => {
               <img :src="about.photo_path_url || `/${about.photo_path}`" alt="Current photo" class="h-28 w-28 rounded-full object-cover mx-auto ring-4 ring-indigo-400 ring-offset-2 shadow-lg" />
               <p class="text-xs text-gray-500 mt-2">Current photo</p>
             </div>
-            <ImageUploader v-model="photo_path" folder="abouts" />
+            <ImageUploader 
+              :modelValue="props.form.photo_path"
+              @update:modelValue="(val: File | string | null) => { props.form.photo_path = val as File | null; }"
+              folder="abouts" 
+            />
           </div>
         </section>
 
@@ -418,18 +315,8 @@ onMounted(() => {
             <h3 class="text-lg font-semibold text-gray-900">Status</h3>
           </div>
           <div class="flex flex-col gap-2">
-            <label 
-              v-for="option in statusOptions" 
-              :key="option.value" 
-              class="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all" 
-              :class="status === option.value ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'"
-            >
-              <input 
-                type="radio" 
-                v-model="status" 
-                :value="option.value" 
-                class="h-4 w-4 rounded text-indigo-400 border-gray-300 focus:ring-indigo-500" 
-              />
+            <label v-for="option in statusOptions" :key="option.value" class="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all" :class="status === option.value ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'">
+              <input type="radio" v-model="status" :value="option.value" class="h-4 w-4 rounded text-indigo-400 border-gray-300 focus:ring-indigo-500" />
               <div>
                 <span class="font-medium text-gray-900">{{ option.label }}</span>
               </div>

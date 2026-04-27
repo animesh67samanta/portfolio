@@ -53,37 +53,42 @@ const page = usePage<PageProps>();
 //     }
 // };
 
-const menuItems: MenuItem[] = [
+const menuItems = computed<MenuItem[]>(() => [
     { label: 'Dashboard', routeName: 'admin.dashboard', icon: Squares2X2Icon },
-    { label: 'Banners', routeName: 'admin.banners.index', icon: PhotoIcon },
+    { label: 'Banners', routeName: 'admin.banners.index', icon: PhotoIcon, badge: page.props.sidebarCounts?.draftBanners },
     { label: 'About', routeName: 'admin.abouts.index', icon: UserIcon },
-    { label: 'Skills', routeName: 'admin.skills.index', icon: CodeBracketIcon },
-    { label: 'Projects', routeName: 'admin.projects.index', icon: FolderIcon },
-    { label: 'Blogs', routeName: 'admin.blogs.index', icon: DocumentTextIcon, badge: 3 },
-    { label: 'Testimonials', routeName: 'admin.testimonials.index', icon: ChatBubbleLeftRightIcon },
-    { label: 'Contacts', routeName: 'admin.contacts.index', icon: EnvelopeIcon, badge: 5 },
+    { label: 'Skills', routeName: 'admin.skills.index', icon: CodeBracketIcon, badge: page.props.sidebarCounts?.inactiveSkills },
+    { label: 'Projects', routeName: 'admin.projects.index', icon: FolderIcon, badge: page.props.sidebarCounts?.draftProjects },
+    { label: 'Blogs', routeName: 'admin.blogs.index', icon: DocumentTextIcon, badge: page.props.sidebarCounts?.draftBlogs },
+    { label: 'Testimonials', routeName: 'admin.testimonials.index', icon: ChatBubbleLeftRightIcon, badge: page.props.sidebarCounts?.inactiveTestimonials },
+    { label: 'Contacts', routeName: 'admin.contacts.index', icon: EnvelopeIcon, badge: page.props.sidebarCounts?.unreadContacts },
     { label: 'Profile Settings', routeName: 'profile.edit', icon: KeyIcon },
-];
+]);
 
 const userName = computed(() => page.props.auth.user?.name ?? 'Admin User');
 const userEmail = computed(() => page.props.auth.user?.email ?? 'admin@example.com');
 const userAvatar = computed(() => page.props.auth.user?.avatar ?? null);
 
 const resolveHref = (routeName: string): string => {
-    if (route().has(routeName)) {
+    if (typeof route !== 'undefined' && route().has(routeName)) {
         return route(routeName);
     }
     return '#';
 };
 
 const isActiveRoute = (routeName: string): boolean => {
+    if (typeof route === 'undefined') {
+        return false;
+    }
     return route().current(routeName);
 };
 
 const logout = (): void => {
-    router.post(route('logout'), {}, {
+    const logoutRoute = typeof route !== 'undefined' ? route('logout') : '/logout';
+    const loginRoute = typeof route !== 'undefined' ? route('login') : '/login';
+    router.post(logoutRoute, {}, {
         onSuccess: () => {
-            router.visit(route('login'));
+            router.visit(loginRoute);
         },
     });
 };
@@ -224,7 +229,7 @@ const logout = (): void => {
                                 leave-to-class="transform scale-95 opacity-0"
                             >
                                 <div
-                                    v-if="isUserMenuOpen"
+                                    v-show="isUserMenuOpen"
                                     class="absolute right-0 mt-2 w-56 origin-top-right rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900"
                                 >
                                     <div class="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
@@ -233,7 +238,7 @@ const logout = (): void => {
                                     </div>
                                     <div class="p-2">
                                         <Link
-                                            :href="route('profile.edit')"
+                                            :href="typeof route !== 'undefined' ? route('profile.edit') : '/profile'"
                                             class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                             @click="isUserMenuOpen = false"
                                         >

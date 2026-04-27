@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::post('/contact', [FrontendContactController::class, 'store'])->name('contacts.store');
+Route::post('/blogs/{blog}/view', [\App\Http\Controllers\Frontend\BlogController::class, 'view'])->name('blogs.view');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::prefix('admin')->name('admin.')->middleware('can:accessAdmin')->group(function (): void {

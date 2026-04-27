@@ -26,21 +26,21 @@ const props = defineProps<{
     selectedContact?: Contact | null;
 }>();
 
-const statusOptions = [
-    { value: 'new', label: 'New' },
-    { value: 'in_progress', label: 'In progress' },
-    { value: 'closed', label: 'Closed' },
-] as const;
+// const statusOptions = [
+//     { value: 'new', label: 'New' },
+//     { value: 'in_progress', label: 'In progress' },
+//     { value: 'closed', label: 'Closed' },
+// ] as const;
 
-const createForm = useForm({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    is_read: false,
-    status: 'new' as 'new' | 'in_progress' | 'closed',
-});
+// const createForm = useForm({
+//     name: '',
+//     email: '',
+//     phone: '',
+//     subject: '',
+//     message: '',
+//     is_read: false,
+//     status: 'new' as 'new' | 'in_progress' | 'closed',
+// });
 
 const isEditOpen = ref(false);
 const isReplyOpen = ref(false);
@@ -60,30 +60,30 @@ const replyForm = useForm({
     message: '',
 });
 
-const submitCreate = () => {
-    createForm.post(route('admin.contacts.store'), {
-        onSuccess: () => {
-            createForm.reset();
-            createForm.clearErrors();
-        },
-    });
-};
+// const submitCreate = () => {
+//     createForm.post(route('admin.contacts.store'), {
+//         onSuccess: () => {
+//             createForm.reset();
+//             createForm.clearErrors();
+//         },
+//     });
+// };
 
-const openEdit = (contact: Contact) => {
-    editing.value = contact;
-    editForm.defaults({
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone ?? '',
-        subject: contact.subject ?? '',
-        message: contact.message,
-        is_read: contact.is_read,
-        status: contact.status,
-    });
-    editForm.reset();
-    editForm.clearErrors();
-    isEditOpen.value = true;
-};
+// const openEdit = (contact: Contact) => {
+//     editing.value = contact;
+//     editForm.defaults({
+//         name: contact.name,
+//         email: contact.email,
+//         phone: contact.phone ?? '',
+//         subject: contact.subject ?? '',
+//         message: contact.message,
+//         is_read: contact.is_read,
+//         status: contact.status,
+//     });
+//     editForm.reset();
+//     editForm.clearErrors();
+//     isEditOpen.value = true;
+// };
 
 const closeEdit = () => {
     isEditOpen.value = false;
@@ -91,15 +91,15 @@ const closeEdit = () => {
     editForm.clearErrors();
 };
 
-const submitUpdate = () => {
-    if (!editing.value) {
-        return;
-    }
+// const submitUpdate = () => {
+//     if (!editing.value) {
+//         return;
+//     }
 
-    editForm.patch(route('admin.contacts.update', editing.value.id), {
-        onSuccess: () => closeEdit(),
-    });
-};
+//     editForm.patch(route('admin.contacts.update', editing.value.id), {
+//         onSuccess: () => closeEdit(),
+//     });
+// };
 
 const markReadState = (contact: Contact, read: boolean) => {
     const form = useForm({});
@@ -144,18 +144,7 @@ const destroyContact = (contact: Contact) => {
 
     <AdminLayout page-title="Contacts">
         <div class="space-y-6">
-            <SectionCard>
-                <h2 class="text-xl font-semibold text-slate-900">Create Contact Message</h2>
-                <p class="mt-1 text-sm text-slate-600">You can manually log incoming contacts.</p>
-                <form class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="submitCreate">
-                    <ContactFormFields :form="createForm" :status-options="statusOptions" prefix="create" />
-                    <div class="md:col-span-2 flex justify-end">
-                        <LoadingButton :loading="createForm.processing" :disabled="createForm.processing">
-                            Create contact
-                        </LoadingButton>
-                    </div>
-                </form>
-            </SectionCard>
+        
 
             <SectionCard>
                 <div class="flex items-center justify-between gap-4">
@@ -183,7 +172,7 @@ const destroyContact = (contact: Contact) => {
                                 <td class="px-4 py-3 text-slate-700">{{ contact.status }}</td>
                                 <td class="px-4 py-3 text-slate-700">{{ contact.is_read ? 'Read' : 'Unread' }}</td>
                                 <td class="px-4 py-3 text-right">
-                                    <button type="button" class="rounded-md px-2 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100" @click="openEdit(contact)">Edit</button>
+                                    <!-- <button type="button" class="rounded-md px-2 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100" @click="openEdit(contact)">Edit</button> -->
                                     <button type="button" class="rounded-md px-2 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-50" @click="openReply(contact)">Reply</button>
                                     <button type="button" class="rounded-md px-2 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-50" @click="markReadState(contact, !contact.is_read)">
                                         {{ contact.is_read ? 'Unread' : 'Read' }}
@@ -200,7 +189,7 @@ const destroyContact = (contact: Contact) => {
             </SectionCard>
         </div>
 
-        <Modal :show="isEditOpen" max-width="2xl" @close="closeEdit">
+        <!-- <Modal :show="isEditOpen" max-width="2xl" @close="closeEdit">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900">Edit Contact</h3>
                 <p class="mt-1 text-sm text-slate-600">Update contact and conversation details.</p>
@@ -212,7 +201,7 @@ const destroyContact = (contact: Contact) => {
                     </div>
                 </form>
             </div>
-        </Modal>
+        </Modal> -->
 
         <Modal :show="isReplyOpen" max-width="lg" @close="closeReply">
             <div class="p-6">
@@ -223,7 +212,7 @@ const destroyContact = (contact: Contact) => {
                     <textarea
                         id="reply_message"
                         v-model="replyForm.message"
-                        class="block min-h-36 w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        class="textarea-field min-h-36 w-full focus:border-indigo-500 focus:ring-indigo-500"
                     />
                     <p v-if="replyForm.errors.message" class="text-sm text-rose-600">{{ replyForm.errors.message }}</p>
                     <div class="flex justify-end gap-2">

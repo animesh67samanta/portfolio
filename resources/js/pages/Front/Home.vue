@@ -54,9 +54,12 @@ type Blog = {
     id: number;
     title: string;
     slug: string;
+    content: string | null;
     excerpt: string | null;
     featured_image: string | null;
+    cover_image: string | null;
     published_at: string | null;
+    views_count: number;
 };
 
 type Testimonial = {

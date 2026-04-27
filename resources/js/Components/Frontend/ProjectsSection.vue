@@ -15,10 +15,10 @@ defineProps<{
 </script>
 
 <template>
-    <section id="projects" class="mt-20 max-w-6xl mx-auto ">
-        <div class="mb-8 text-center">
-            <p class="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-400">Projects</p>
-            <h2 class="mt-2 text-3xl font-bold text-slate-900">Latest Work</h2>
+    <section id="projects" class="mt-12 py-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="mb-10 text-center">
+            <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">Projects</p>
+            <h2 class="mt-2 text-3xl font-bold uppercase tracking-[0.25em] text-slate-900">Latest Work</h2>
         </div>
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <article
@@ -40,9 +40,9 @@ defineProps<{
                             v-if="project.project_url"
                             :href="project.project_url"
                             target="_blank"
-                            class="rounded-md bg-indigo-400 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                            class="rounded-md bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
                         >
-                            Live
+                            Visit
                         </a>
                         <a
                             v-if="project.repository_url"

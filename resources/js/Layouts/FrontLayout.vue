@@ -47,10 +47,10 @@ let observer: IntersectionObserver | null = null;
 const linkClass = (id: string): string =>
 `${
     activeSection.value === id
-        ? 'text-indigo-400 font-semibold'
+        ? 'text-indigo-500 font-semibold'
         : isScrolled.value
-        ? 'text-black-700 hover:text-red-500'
-        : 'text-black-600 hover:text-red-300'
+        ? 'text-black-700 hover:text-indigo-500'
+        : 'text-black-600 hover:text-indigo-500'
 }`;
 
 const closeMenu = (): void => {
@@ -143,12 +143,11 @@ onBeforeUnmount(() => {
                     >
                         {{ item.label }}
                     </a>
-                    <Link class="py-1.5 text-sm text-slate-600 transition hover:text-slate-900" :href="route('login')">Login</Link>
                 </div>
             </nav>
         </header>
 
-        <main class="pt-24 mx-auto px-5 md:py-20">
+        <main class="pt-24 pb-12 md:py-20 px-4 sm:px-6 lg:px-8">
             <slot />
         </main>
 

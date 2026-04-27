@@ -26,7 +26,7 @@ class ProjectRequest extends FormRequest
             'slug' => ['required', 'string', 'max:255', Rule::unique('projects', 'slug')->ignore($projectId)],
             'summary' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'thumbnail_path' => [$thumbnailRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'thumbnail_path' => [$thumbnailRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:8048'],
             'project_url' => ['nullable', 'url', 'max:255'],
             'repository_url' => ['nullable', 'url', 'max:255'],
             'started_at' => ['nullable', 'date'],

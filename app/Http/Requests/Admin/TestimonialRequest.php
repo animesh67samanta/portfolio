@@ -22,7 +22,7 @@ class TestimonialRequest extends FormRequest
             'client_name' => ['required', 'string', 'max:255'],
             'client_role' => ['nullable', 'string', 'max:255'],
             'company' => ['nullable', 'string', 'max:255'],
-            'avatar_path' => [$avatarRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'avatar_path' => [$avatarRule, 'image', 'mimes:jpg,jpeg,png,webp', 'max:9048'],
             'quote' => ['required', 'string'],
             'rating' => ['nullable', 'integer', 'min:1', 'max:5'],
             'status' => ['required', 'in:active,inactive'],

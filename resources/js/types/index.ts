@@ -12,5 +12,13 @@ export interface PageProps {
         name?: string | null;
         url?: string | null;
     };
+    sidebarCounts?: {
+        unreadContacts: number;
+        draftBlogs: number;
+        draftBanners: number;
+        draftProjects: number;
+        inactiveSkills: number;
+        inactiveTestimonials: number;
+    };
     [key: string]: unknown;
 }

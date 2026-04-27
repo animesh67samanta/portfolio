@@ -53,12 +53,12 @@ const styles = computed(() => {
 <template>
     <div class="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
         <transition
-            enter-active-class="transition duration-200 ease-out"
-            enter-from-class="opacity-0 -translate-y-2"
-            enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition duration-150 ease-in"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 -translate-y-2"
+        enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 translate-x-full"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 translate-x-full"
         >
             <div
                 v-if="isVisible"
@@ -105,4 +105,3 @@ const styles = computed(() => {
         </transition>
     </div>
 </template>
-

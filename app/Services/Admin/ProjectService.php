@@ -29,7 +29,7 @@ class ProjectService
     public function create(array $data): Project
     {
         if (isset($data['thumbnail_path'])) {
-            $data['thumbnail_path'] = $this->imageService->storeImage($data['thumbnail_path'], 'projects');
+            $data['thumbnail_path'] = $this->imageService->storeImage($data['thumbnail_path'], 'projects', 1200, 800);
         }
 
         $project = Project::create($data);

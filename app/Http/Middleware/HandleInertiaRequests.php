@@ -2,6 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Banner;
+use App\Models\Blog;
+use App\Models\Contact;
+use App\Models\Project;
+use App\Models\Skill;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +47,14 @@ class HandleInertiaRequests extends Middleware
             'app' => [
                 'name' => config('app.name'),
                 'url' => config('app.url'),
+            ],
+            'sidebarCounts' => [
+                'unreadContacts' => Contact::where('is_read', false)->count(),
+                'draftBlogs' => Blog::where('status', 'draft')->count(),
+                'draftBanners' => Banner::where('status', 'draft')->count(),
+                'draftProjects' => Project::where('status', 'draft')->count(),
+                'inactiveSkills' => Skill::where('status', 'inactive')->count(),
+                'inactiveTestimonials' => Testimonial::where('status', 'inactive')->count(),
             ],
         ];
     }

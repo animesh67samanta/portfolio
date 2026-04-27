@@ -92,7 +92,7 @@ const getStatusColor = (status: string) => {
                                         </li>
                                         <li class="flex items-center gap-2">
                                             <span class="inline-block h-2 w-2 rounded-full bg-indigo-500"></span>
-                                            Formats: PNG, JPG, WebP • Max: 2MB
+                                            Formats: PNG, JPG, WebP • Max: 9MB
                                         </li>
                                     </ul>
                                 </div>

@@ -20,7 +20,7 @@ const currentSlide = ref(0);
 
 const fallbackBanner: Banner = {
     id: 0,
-    title: 'Clyde',
+    title: 'WE DESIGN & BUILD BRANDS',
     subtitle: 'Creative UI/UX Designer & Developer',
     image_path: '',
     cta_text: null,
@@ -38,10 +38,18 @@ const displayName = computed(() => {
         .trim() || fallbackBanner.title;
 });
 
-const heading = computed(() => activeBanner.value?.subtitle || fallbackBanner.subtitle);
-const description = computed(
-    () => 'I design and build modern, accessible digital products with a clean user experience.',
-);
+const headingParts = computed(() => {
+    const text = activeBanner.value?.subtitle || fallbackBanner.subtitle;
+    const words = text?.split(' ') || [];
+
+    const partSize = Math.ceil(words.length / 3);
+
+    return [
+        words.slice(0, partSize).join(' '),
+        words.slice(partSize, partSize * 2).join(' '),
+        words.slice(partSize * 2).join(' ')
+    ];
+});
 
 let sliderInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -60,24 +68,6 @@ const stopSlider = (): void => {
         clearInterval(sliderInterval);
         sliderInterval = null;
     }
-};
-
-const goToSlide = (index: number): void => {
-    currentSlide.value = index;
-    stopSlider();
-    startSlider();
-};
-
-const goToPrevious = (): void => {
-    currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length;
-    stopSlider();
-    startSlider();
-};
-
-const goToNext = (): void => {
-    currentSlide.value = (currentSlide.value + 1) % slides.value.length;
-    stopSlider();
-    startSlider();
 };
 
 watch(
@@ -106,16 +96,21 @@ onBeforeUnmount(() => {
     <section id="home" class="relative h-screen overflow-hidden bg-white">
 
         <!-- RIGHT IMAGE -->
-        <div class="absolute inset-y-0 right-0 w-[60%]">
+        <div class="absolute inset-y-0 right-0 w-full md:w-[60%]">
             <img
                 v-if="props.imageUrl(activeBanner.image_path)"
                 :src="props.imageUrl(activeBanner.image_path)"
-                class="h-full w-full object-cover"
+                class="h-full w-full object-cover opacity-70 md:opacity-100"
             />
         </div>
 
         <!-- DIAGONAL SHAPE -->
-        <div class="absolute inset-y-0 right-[55%] w-[30%] bg-slate-100 skew-x-[-20deg] shadow-z-10 shadow-lg"></div>
+        <div class="hidden md:block absolute inset-y-0 right-[45%] w-[30%] bg-slate-200 skew-x-[-20deg] shadow-z-10 shadow-lg">
+            
+        </div>
+
+        <!-- MOBILE OVERLAY FOR TEXT READABILITY -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent/100  md:hidden z-10"></div>
 
         <!-- CONTENT -->
         <div class="relative z-20 flex h-full items-center">
@@ -123,35 +118,41 @@ onBeforeUnmount(() => {
 
                 <div class="max-w-xl">
                     <!-- SMALL TEXT -->
-                    <p class="text-xs tracking-[0.25em] text-[#a3a17e] uppercase mt-10">
-                        WE DESIGN & BUILD BRANDS
+                    <p class="text-lg xs:text-xs tracking-[0.25em] text-[#a3a17e] uppercase mt-10">
+                        {{ displayName }}
                     </p>
 
                     <!-- MAIN HEADING -->
-                    <h1 class="mt-4 text-5xl md:text-6xl font-extrabold leading-tight text-black">
-                        Hi, I am 
-                        <span class="text-[#a3a17e]">{{ displayName }}</span>
+                    <!-- <h1 class="mt-4 text-3xl sm:text-5xl md:text-5xl font-extrabold leading-tight text-black">
+                        {{ headingParts[0] }}
+                        <span class="text-[#a3a17e]">{{ headingParts[1] }}</span>
                         <br />
-                        This is my favorite work.
+                        {{ headingParts[2] }}
+                    </h1> -->
+                    <h1 class="mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-5xl 
+                            font-extrabold leading-tight text-black
+                            max-w-2xl">
+
+                        {{ headingParts[0] }}
+
+                        <span class="block mt-2 bg-gradient-to-r from-[#2cf5b1] to-[#022c9c] bg-clip-text text-transparent">
+                            {{ headingParts[1] }}
+                        </span>
+                        <span class="block mt-2 text-slate-700 font-semibold">
+                            {{ headingParts[2] }}
+                        </span>
                     </h1>
 
                     <!-- BUTTONS -->
-                    <div class="mt-8 flex gap-4">
+                    <div class="mt-8 flex flex-wrap gap-4">
                         <a
                             v-if="activeBanner.cta_url"
                             :href="activeBanner.cta_url"
                             class="px-6 py-3 rounded bg-[#a3a17e] text-white text-sm font-semibold hover:opacity-90 transition"
                         >
-                            Hire me
+                            {{activeBanner.cta_text}}
                         </a>
 
-                        <a
-                            v-if="resumeUrl"
-                            :href="resumeUrl"
-                            class="px-6 py-3 rounded border border-[#a3a17e] text-[#a3a17e] text-sm font-semibold hover:bg-[#a3a17e] hover:text-white transition"
-                        >
-                            Download CV
-                        </a>
                     </div>
                 </div>
 

@@ -57,14 +57,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <section id="testimonials" class="py-24 bg-[#f8f8f8] mt-10 text-center max-w-8xl mx-auto">
+    <section id="testimonials" class="py-10 bg-[#f8f8f8] mt-12 text-center max-w-8xl mx-auto">
 
         <!-- HEADER -->
-        <div class="max-w-6xl mx-auto px-6 mb-16">
-            <p class="text-xs tracking-[0.25em] text-indigo-400 uppercase">
+        <div class="mb-12 text-center">
+            <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">
                 Testimonials
             </p>
-            <h2 class="mt-3 text-4xl font-bold text-slate-900">
+            <h2 class="mt-2 text-3xl font-bold uppercase tracking-[0.25em] text-slate-900">
                 What client says about?
             </h2>
         </div>

@@ -24,7 +24,7 @@ class SkillRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('skills', 'slug')->ignore($skillId)],
             'proficiency' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Optional: allow null/empty
+            'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4048'], // Optional: allow null/empty
             'status' => ['required', 'in:active,inactive'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ];

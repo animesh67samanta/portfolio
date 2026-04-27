@@ -19,6 +19,7 @@ const showPassword = ref(false);
 
 const submit = () => {
     form.post(route('login'), {
+        preserveState: true,
         onFinish: () => {
             form.reset('password');
         },
@@ -28,7 +29,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Login" />
 
         <!-- Status Message -->
         <div 
@@ -134,7 +135,7 @@ const submit = () => {
                 </button>
 
                 <!-- Sign Up Link -->
-                <div class="text-center pt-4">
+                <!-- <div class="text-center pt-4">
                     <p class="text-sm text-gray-600">
                         Don't have an account?
                         <Link 
@@ -144,21 +145,21 @@ const submit = () => {
                             Sign up
                         </Link>
                     </p>
-                </div>
+                </div> -->
             </form>
 
             <!-- Divider -->
-            <div class="relative my-8">
+            <!-- <div class="relative my-8">
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-gray-300"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
                     <span class="px-4 bg-white text-gray-500">Or continue with</span>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Social Login Options -->
-            <div class="grid grid-cols-2 gap-4">
+            <!-- <div class="grid grid-cols-2 gap-4">
                 <button class="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200">
                     <svg class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -174,7 +175,7 @@ const submit = () => {
                     </svg>
                     <span class="text-sm font-medium text-gray-700">Facebook</span>
                 </button>
-            </div>
+            </div> -->
         </div>
     </GuestLayout>
 </template>
