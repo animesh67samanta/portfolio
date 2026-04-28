@@ -158,7 +158,7 @@ const formatDate = (date: string | null): string => {
 </script>
 
 <template>
-    <Head title="" />
+    <Head title="Animesh Samanta" />
 
     <FrontLayout>
         <HeroSection
