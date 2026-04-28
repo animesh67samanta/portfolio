@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
-import { computed, watch } from 'vue';
-import FormField from '@/Components/FormField.vue';
+import { computed, watch, onMounted } from 'vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import SectionCard from '@/Components/SectionCard.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
@@ -14,7 +13,7 @@ type ExperienceItem = {
   duration: string;
   description: string;
   company_url: string;
-    location: string;
+  location: string;
 };
 
 type EducationItem = {
@@ -66,15 +65,13 @@ const initializeExperiences = (experiences?: ExperienceItem[]): ExperienceItem[]
     if (experiences && experiences.length > 0) {
         return experiences;
     }
-    // Start with ONE empty entry for new records
-    return [{ title: '', company: '', duration: '', description: '', company_url: '', location: ''}];
+    return [{ title: '', company: '', duration: '', description: '', company_url: '', location: '' }];
 };
 
 const initializeEducations = (educations?: EducationItem[]): EducationItem[] => {
     if (educations && educations.length > 0) {
         return educations;
     }
-    // Start with ONE empty entry for new records
     return [{ degree: '', institution: '', year: '', description: '' }];
 };
 
@@ -106,9 +103,33 @@ const form = useForm<{
     educations: initializeEducations(currentAbout.value?.educations),
 });
 
-// Watch for currentAbout changes (post-submit refresh)
-// Removed watcher - let component handle array mutations
-// Only sync scalar fields
+// Array manipulation methods
+const addExperience = () => {
+    form.experiences.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
+};
+
+const removeExperience = (index: number) => {
+    form.experiences.splice(index, 1);
+};
+
+const addEducation = () => {
+    form.educations.push({ degree: '', institution: '', year: '', description: '' });
+};
+
+const removeEducation = (index: number) => {
+    form.educations.splice(index, 1);
+};
+
+const ensureMinimumEntries = () => {
+    if (form.experiences.length === 0) {
+        form.experiences.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
+    }
+    if (form.educations.length === 0) {
+        form.educations.push({ degree: '', institution: '', year: '', description: '' });
+    }
+};
+
+// Watch for currentAbout changes
 watch(currentAbout, (newAbout) => {
     if (newAbout) {
         form.name = newAbout.name;
@@ -120,25 +141,44 @@ watch(currentAbout, (newAbout) => {
         form.content = newAbout.content;
         form.resume_url = newAbout.resume_url ?? '';
         form.status = newAbout.status ?? 'draft';
-        // Don't override experiences/educations - let component manage
+        
+        if (newAbout.experiences && newAbout.experiences.length > 0) {
+            form.experiences = [...newAbout.experiences];
+        }
+        if (newAbout.educations && newAbout.educations.length > 0) {
+            form.educations = [...newAbout.educations];
+        }
+        ensureMinimumEntries();
     }
+}, { deep: true });
+
+onMounted(() => {
+    ensureMinimumEntries();
 });
 
 const submit = () => {
+    // console.log('Submitting form data:', form.data());
+    
     if (currentAbout.value) {
         form.put(route('admin.abouts.update', currentAbout.value.id), {
-            method: 'patch',
-            forceFormData: true,
+            preserveScroll: true,
             onSuccess: () => {
                 form.photo_path = null;
+            },
+            onError: (errors) => {
+                console.error('Validation errors:', errors);
             },
         });
         return;
     }
+    
     form.post(route('admin.abouts.store'), {
-        forceFormData: true,
+        preserveScroll: true,
         onSuccess: () => {
             form.photo_path = null;
+        },
+        onError: (errors) => {
+            console.error('Validation errors:', errors);
         },
     });
 };
@@ -167,8 +207,26 @@ const submit = () => {
                 </div>
             </div>
             
+            <!-- Display validation errors -->
+            <div v-if="Object.keys(form.errors).length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <h3 class="text-red-800 font-semibold mb-2">Please fix the following errors:</h3>
+                <ul class="list-disc list-inside text-red-600">
+                    <li v-for="(error, field) in form.errors" :key="field">
+                        <strong>{{ field }}:</strong> {{ error }}
+                    </li>
+                </ul>
+            </div>
+            
             <form class="mt-6" @submit.prevent="submit">
-                <AboutFormFields :form="form" :about="currentAbout" :status-options="statusOptions" />
+                <AboutFormFields 
+                    :form="form" 
+                    :about="currentAbout" 
+                    :status-options="statusOptions"
+                    :add-experience="addExperience"
+                    :remove-experience="removeExperience"
+                    :add-education="addEducation"
+                    :remove-education="removeEducation"
+                />
                             
                 <!-- Form Actions -->
                 <div class="mt-6 flex justify-end gap-4">
@@ -204,7 +262,3 @@ const submit = () => {
         </SectionCard>
     </AdminLayout>
 </template>
-
-<style scoped>
-/* Minimal styles needed, rest in component */
-</style>

@@ -54,7 +54,7 @@ class AboutController extends Controller
             unset($validated['photo_path']);
         }
 
-        $about->update($validated);
+        $about->fill($validated)->save();
 
         return redirect()->route('admin.abouts.index')->with('success', 'About entry updated successfully.');
     }
@@ -65,7 +65,7 @@ class AboutController extends Controller
     public function destroy(About $about): RedirectResponse
     {
         $this->deletePublicPath($about->photo_path);
-        $about->delete();
+        $about->forceDelete();
 
         return redirect()->route('admin.abouts.index')->with('success', 'About entry deleted successfully.');
     }

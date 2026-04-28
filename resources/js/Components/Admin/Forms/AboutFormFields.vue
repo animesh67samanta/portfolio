@@ -1,99 +1,19 @@
 <script setup lang="ts">
-import { reactive, toRefs, watch, onMounted, nextTick } from 'vue';
 import FormField from '@/Components/FormField.vue';
 import ImageUploader from '@/Components/Admin/ImageUploader.vue';
 import { UserIcon, MapPinIcon, BriefcaseIcon, AcademicCapIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline';
 
-interface ExperienceItem {
-  title: string;
-  company: string;
-  duration: string;
-  description: string;
-  company_url: string;
-  location: string;
-}
-
-interface EducationItem {
-  degree: string;
-  institution: string;
-  year: string;
-  description: string;
-}
-
-interface StatusOption {
-  value: string;
-  label: string;
-  color: string;
-}
-
-interface FormData {
-  name: string;
-  email: string;
-  mobile: string;
-  current_address: string;
-  permanent_address: string;
-  heading: string;
-  content: string;
-  photo_path: File | null;
-  resume_url: string;
-  status: string;
-  experiences: ExperienceItem[];
-  educations: EducationItem[];
-  errors: Record<string, string>;
-}
-
 interface Props {
-  form: FormData;
+  form: any;
   about: any | null;
-  statusOptions: StatusOption[];
+  statusOptions: any[];
+  addExperience: () => void;
+  removeExperience: (index: number) => void;
+  addEducation: () => void;
+  removeEducation: (index: number) => void;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  about: null
-});
-
-const formLocal = reactive({...props.form});
-const { name, email, mobile, current_address, permanent_address, heading, content, photo_path, resume_url, status, experiences, educations, errors } = toRefs(formLocal);
-
-const addExperience = () => {
-  experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
-};
-
-const removeExperience = (index: number) => {
-  experiences.value.splice(index, 1);
-};
-
-const addEducation = () => {
-  educations.value.push({ degree: '', institution: '', year: '', description: '' });
-};
-
-const removeEducation = (index: number) => {
-  educations.value.splice(index, 1);
-};
-
-const ensureMinimumEntries = () => {
-  if (experiences.value.length === 0) {
-    experiences.value.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
-  }
-  if (educations.value.length === 0) {
-    educations.value.push({ degree: '', institution: '', year: '', description: '' });
-  }
-};
-
-watch(
-  () => props.form,
-  (newForm) => {
-    experiences.value = [];
-    educations.value = [];
-    Object.assign(formLocal, newForm as FormData);
-    nextTick(() => ensureMinimumEntries());
-  },
-  { immediate: true, deep: true }
-);
-
-onMounted(() => {
-  ensureMinimumEntries();
-});
+const props = defineProps<Props>();
 </script>
 
 <template>
@@ -110,17 +30,17 @@ onMounted(() => {
             <h3 class="text-lg font-semibold text-gray-900">Personal Information</h3>
           </div>
           <div class="grid md:grid-cols-2 gap-4">
-            <FormField label="Full Name" name="name" :error="errors.name" required>
-              <input v-model="name" type="text" placeholder="John Doe" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+            <FormField label="Full Name" name="name" :error="form.errors.name" required>
+              <input v-model="form.name" type="text" placeholder="John Doe" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
             </FormField>
-            <FormField label="Email" name="email" :error="errors.email" required>
-              <input v-model="email" type="email" placeholder="john@example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+            <FormField label="Email" name="email" :error="form.errors.email" required>
+              <input v-model="form.email" type="email" placeholder="john@example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
             </FormField>
-            <FormField label="Mobile" name="mobile" :error="errors.mobile" required>
-              <input v-model="mobile" type="tel" placeholder="+1 234 567 8900" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+            <FormField label="Mobile" name="mobile" :error="form.errors.mobile" required>
+              <input v-model="form.mobile" type="tel" placeholder="+1 234 567 8900" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
             </FormField>
-            <FormField label="Resume URL" name="resume_url" :error="errors.resume_url">
-              <input v-model="resume_url" type="url" placeholder="https://resume.example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+            <FormField label="Resume URL" name="resume_url" :error="form.errors.resume_url">
+              <input v-model="form.resume_url" type="url" placeholder="https://resume.example.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
             </FormField>
           </div>
         </section>
@@ -134,11 +54,11 @@ onMounted(() => {
             <h3 class="text-lg font-semibold text-gray-900">Address</h3>
           </div>
           <div class="grid md:grid-cols-2 gap-4">
-            <FormField label="Current Address" name="current_address" :error="errors.current_address" required>
-              <textarea v-model="current_address" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Current address" />
+            <FormField label="Current Address" name="current_address" :error="form.errors.current_address" required>
+              <textarea v-model="form.current_address" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Current address" />
             </FormField>
-            <FormField label="Permanent Address" name="permanent_address" :error="errors.permanent_address" required>
-              <textarea v-model="permanent_address" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Permanent address" />
+            <FormField label="Permanent Address" name="permanent_address" :error="form.errors.permanent_address" required>
+              <textarea v-model="form.permanent_address" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Permanent address" />
             </FormField>
           </div>
         </section>
@@ -154,12 +74,12 @@ onMounted(() => {
             <h3 class="text-lg font-semibold text-gray-900">Content</h3>
           </div>
           <div class="space-y-4">
-            <FormField label="Heading" name="heading" :error="errors.heading" required>
-              <input v-model="heading" type="text" placeholder="About Me" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+            <FormField label="Heading" name="heading" :error="form.errors.heading" required>
+              <input v-model="form.heading" type="text" placeholder="About Me" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
             </FormField>
-            <FormField label="Content" name="content" :error="errors.content" required>
-              <textarea v-model="content" rows="8" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Your bio..." />
-              <p class="text-right text-xs text-gray-500 mt-1">{{ content?.length || 0 }}/2000</p>
+            <FormField label="Content" name="content" :error="form.errors.content" required>
+              <textarea v-model="form.content" rows="8" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-vertical" placeholder="Your bio..." />
+              <p class="text-right text-xs text-gray-500 mt-1">{{ form.content?.length || 0 }}/4000</p>
             </FormField>
           </div>
         </section>
@@ -173,14 +93,14 @@ onMounted(() => {
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Experiences</h3>
             </div>
-            <span class="text-xs text-gray-500">{{ experiences.length }} entry(ies)</span>
+            <span class="text-xs text-gray-500">{{ form.experiences.length }} entry(ies)</span>
           </div>
           
           <div class="space-y-4">
-            <div v-for="(exp, i) in experiences" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+            <div v-for="(exp, i) in form.experiences" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
               <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-                <h4 class="font-medium text-gray-700">Entry {{ i + 1 }}</h4>
-                <button v-if="experiences.length > 1" @click="removeExperience(i)" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
+                <h4 class="font-medium text-gray-700">Entry {{ Number(i) + 1 }}</h4>
+                <button v-if="form.experiences.length > 1" @click="removeExperience(Number(i))" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
                   <TrashIcon class="h-4 w-4" />
                   Remove
                 </button>
@@ -210,7 +130,7 @@ onMounted(() => {
               
               <div class="mt-3">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                <input v-model="exp.location" type="text" placeholder="e.g., ghatal, West Wedinipur, India" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
+                <input v-model="exp.location" type="text" placeholder="e.g., ghatal, West Bengal, India" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" />
               </div>
               
               <div class="mt-3">
@@ -220,7 +140,7 @@ onMounted(() => {
             </div>
           </div>
           
-          <button @click="addExperience" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-700 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
+          <button @click="addExperience" type="button" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-700 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
             <PlusIcon class="h-4 w-4" />
             Add Experience
           </button>
@@ -235,14 +155,14 @@ onMounted(() => {
               </div>
               <h3 class="text-lg font-semibold text-gray-900">Education</h3>
             </div>
-            <span class="text-xs text-gray-500">{{ educations.length }} entry(ies)</span>
+            <span class="text-xs text-gray-500">{{ form.educations.length }} entry(ies)</span>
           </div>
           
           <div class="space-y-4">
-            <div v-for="(edu, i) in educations" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
+            <div v-for="(edu, i) in form.educations" :key="i" class="p-4 border border-gray-200 rounded-lg bg-white shadow-sm">
               <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-                <h4 class="font-medium text-gray-700">Entry {{ i + 1 }}</h4>
-                <button v-if="educations.length > 1" @click="removeEducation(i)" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
+                <h4 class="font-medium text-gray-700">Entry {{ Number(i) + 1 }}</h4>
+                <button v-if="form.educations.length > 1" @click="removeEducation(Number(i))" type="button" class="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all text-sm">
                   <TrashIcon class="h-4 w-4" />
                   Remove
                 </button>
@@ -271,7 +191,7 @@ onMounted(() => {
             </div>
           </div>
           
-          <button @click="addEducation" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
+          <button @click="addEducation" type="button" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all shadow-sm hover:shadow-md text-sm">
             <PlusIcon class="h-4 w-4" />
             Add Education
           </button>
@@ -296,8 +216,8 @@ onMounted(() => {
               <p class="text-xs text-gray-500 mt-2">Current photo</p>
             </div>
             <ImageUploader 
-              :modelValue="props.form.photo_path"
-              @update:modelValue="(val: File | string | null) => { props.form.photo_path = val as File | null; }"
+              :modelValue="form.photo_path"
+              @update:modelValue="(val) => { form.photo_path = val as File | null; }"
               folder="abouts" 
             />
           </div>
@@ -315,8 +235,8 @@ onMounted(() => {
             <h3 class="text-lg font-semibold text-gray-900">Status</h3>
           </div>
           <div class="flex flex-col gap-2">
-            <label v-for="option in statusOptions" :key="option.value" class="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all" :class="status === option.value ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'">
-              <input type="radio" v-model="status" :value="option.value" class="h-4 w-4 rounded text-indigo-400 border-gray-300 focus:ring-indigo-500" />
+            <label v-for="option in statusOptions" :key="option.value" class="flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:shadow-md transition-all" :class="form.status === option.value ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300'">
+              <input type="radio" v-model="form.status" :value="option.value" class="h-4 w-4 rounded text-indigo-400 border-gray-300 focus:ring-indigo-500" />
               <div>
                 <span class="font-medium text-gray-900">{{ option.label }}</span>
               </div>
