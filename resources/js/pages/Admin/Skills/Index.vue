@@ -1,12 +1,4 @@
 <script setup lang="ts">
-import type { Form } from '@inertiajs/vue3';
-import { Head, useForm, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
-import Modal from '@/Components/Modal.vue';
-import SkillFormFields from '@/Components/Admin/Forms/SkillFormFields.vue';
-import SectionCard from '@/Components/SectionCard.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { 
     PlusIcon, 
     PencilIcon, 
@@ -14,6 +6,14 @@ import {
     XMarkIcon,
     CodeBracketIcon
 } from '@heroicons/vue/24/outline';
+import type { Form } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import SkillFormFields from '@/Components/Admin/Forms/SkillFormFields.vue';
+import LoadingButton from '@/Components/LoadingButton.vue';
+import Modal from '@/Components/Modal.vue';
+import SectionCard from '@/Components/SectionCard.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 interface CreateSkillFormData {
     name: string;
@@ -106,6 +106,7 @@ const submitCreate = () => {
     if (typeof createForm.icon === 'string') {
         createForm.icon = undefined;
     }
+
     createForm.post(route('admin.skills.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -141,12 +142,15 @@ const closeEdit = () => {
 
 // Submit update
 const submitUpdate = () => {
-    if (!editing.value) return;
+    if (!editing.value) {
+return;
+}
 
     // Clean icon before submit if string (existing)
     if (typeof editForm.icon === 'string') {
         editForm.icon = undefined;
     }
+
     editForm.put(route('admin.skills.update', editing.value.id), {
         method: 'patch',
         forceFormData: true,
@@ -168,7 +172,9 @@ const openDelete = (skill: Skill) => {
 
 // Confirm delete
 const confirmDelete = () => {
-    if (!deleting.value) return;
+    if (!deleting.value) {
+return;
+}
 
     router.delete(route('admin.skills.destroy', deleting.value.id), {
         onSuccess: () => {
@@ -190,15 +196,25 @@ const cancelDelete = () => {
 
 // Get image URL
 const getImageUrl = (path: string | null) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
+    if (path.startsWith('/storage')) {
+return path;
+}
+
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
 
 // Get status info
 const getStatusInfo = (status: string) => {
     const option = statusOptions.find(opt => opt.value === status);
+
     return {
         color: option?.color || 'bg-gray-100 text-gray-800',
         icon: option?.icon || '📄'
@@ -208,9 +224,19 @@ const getStatusInfo = (status: string) => {
 // Get proficiency color
 const getProficiencyColor = (proficiency: number | null) => {
     const value = proficiency || 0;
-    if (value >= 80) return 'bg-green-500';
-    if (value >= 60) return 'bg-blue-500';
-    if (value >= 40) return 'bg-yellow-500';
+
+    if (value >= 80) {
+return 'bg-green-500';
+}
+
+    if (value >= 60) {
+return 'bg-blue-500';
+}
+
+    if (value >= 40) {
+return 'bg-yellow-500';
+}
+
     return 'bg-gray-500';
 };
 </script>

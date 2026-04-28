@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed, watch, onMounted } from 'vue';
+import AboutFormFields from '@/Components/Admin/Forms/AboutFormFields.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import SectionCard from '@/Components/SectionCard.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import AboutFormFields from '@/Components/Admin/Forms/AboutFormFields.vue';
-import { PlusIcon } from '@heroicons/vue/24/outline';
 
 type ExperienceItem = {
   title: string;
@@ -65,6 +65,7 @@ const initializeExperiences = (experiences?: ExperienceItem[]): ExperienceItem[]
     if (experiences && experiences.length > 0) {
         return experiences;
     }
+
     return [{ title: '', company: '', duration: '', description: '', company_url: '', location: '' }];
 };
 
@@ -72,6 +73,7 @@ const initializeEducations = (educations?: EducationItem[]): EducationItem[] => 
     if (educations && educations.length > 0) {
         return educations;
     }
+
     return [{ degree: '', institution: '', year: '', description: '' }];
 };
 
@@ -124,6 +126,7 @@ const ensureMinimumEntries = () => {
     if (form.experiences.length === 0) {
         form.experiences.push({ title: '', company: '', duration: '', description: '', company_url: '', location: '' });
     }
+
     if (form.educations.length === 0) {
         form.educations.push({ degree: '', institution: '', year: '', description: '' });
     }
@@ -145,9 +148,11 @@ watch(currentAbout, (newAbout) => {
         if (newAbout.experiences && newAbout.experiences.length > 0) {
             form.experiences = [...newAbout.experiences];
         }
+
         if (newAbout.educations && newAbout.educations.length > 0) {
             form.educations = [...newAbout.educations];
         }
+
         ensureMinimumEntries();
     }
 }, { deep: true });
@@ -169,6 +174,7 @@ const submit = () => {
                 console.error('Validation errors:', errors);
             },
         });
+
         return;
     }
     

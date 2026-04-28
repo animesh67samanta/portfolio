@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import Modal from '@/Components/Modal.vue';
 import { EyeIcon, CalendarIcon, UserIcon, ClockIcon, ArrowLeftIcon, ShareIcon, BookmarkIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/24/solid';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import Modal from '@/Components/Modal.vue';
 
 // Utility: create deep clone of blog array
 type BlogItem = {
@@ -70,13 +70,18 @@ const loadMore = () => {
 
 const getCsrfToken = (): string => {
     const meta = document.querySelector('meta[name="csrf-token"]');
+
     return meta?.getAttribute('content') ?? '';
 };
 
 const calculateReadingTime = (content: string | null): number => {
-    if (!content) return 1;
+    if (!content) {
+return 1;
+}
+
     const wordsPerMinute = 200;
     const words = content.replace(/<[^>]*>/g, '').split(/\s+/).length;
+
     return Math.max(1, Math.ceil(words / wordsPerMinute));
 };
 
@@ -101,6 +106,7 @@ const openBlog = async (blog: BlogItem) => {
 
         // Update local blogs array so card view count reflects immediately
         const idx = localBlogs.value.findIndex((b) => b.id === blog.id);
+
         if (idx !== -1) {
             localBlogs.value[idx].views_count = data.views_count;
         }
@@ -149,17 +155,23 @@ const shareBlog = async () => {
 
 const toggleBookmark = () => {
     isBookmarked.value = !isBookmarked.value;
+
     // Save to localStorage or send to backend
     if (selectedBlog.value) {
         const bookmarks = JSON.parse(localStorage.getItem('blog-bookmarks') || '[]');
+
         if (isBookmarked.value) {
             if (!bookmarks.includes(selectedBlog.value.id)) {
                 bookmarks.push(selectedBlog.value.id);
             }
         } else {
             const index = bookmarks.indexOf(selectedBlog.value.id);
-            if (index > -1) bookmarks.splice(index, 1);
+
+            if (index > -1) {
+bookmarks.splice(index, 1);
+}
         }
+
         localStorage.setItem('blog-bookmarks', JSON.stringify(bookmarks));
     }
 };

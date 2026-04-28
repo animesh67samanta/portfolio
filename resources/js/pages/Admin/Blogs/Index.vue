@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import { Head, useForm, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
-import Modal from '@/Components/Modal.vue';
-import BlogFormFields from '@/Components/Admin/Forms/BlogFormFields.vue';
-import SectionCard from '@/Components/SectionCard.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { 
     PencilIcon, 
     TrashIcon, 
@@ -14,6 +7,13 @@ import {
     DocumentTextIcon,
     XMarkIcon
 } from '@heroicons/vue/24/outline';
+import { Head, useForm, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import BlogFormFields from '@/Components/Admin/Forms/BlogFormFields.vue';
+import LoadingButton from '@/Components/LoadingButton.vue';
+import Modal from '@/Components/Modal.vue';
+import SectionCard from '@/Components/SectionCard.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 type Blog = {
     id: number;
@@ -104,6 +104,7 @@ const submitCreate = () => {
     if (createForm.featured_image && typeof createForm.featured_image === 'string') {
         (createForm as any).featured_image = null;
     }
+
     if (createForm.cover_image && typeof createForm.cover_image === 'string') {
         (createForm as any).cover_image = null;
     }
@@ -145,14 +146,19 @@ const closeEdit = () => {
 
 // Update blog
 const submitUpdate = () => {
-    if (!editing.value) return;
+    if (!editing.value) {
+return;
+}
+
     // Clean image fields before submit if string (existing)
     if (editForm.featured_image && typeof editForm.featured_image === 'string') {
         (editForm as any).featured_image = null;
     }
+
     if (editForm.cover_image && typeof editForm.cover_image === 'string') {
         (editForm as any).cover_image = null;
     }
+
     editForm.put(route('admin.blogs.update', editing.value.id), {
         method: 'patch',
         forceFormData: true,
@@ -174,7 +180,9 @@ const openDelete = (blog: Blog) => {
 
 // Confirm delete
 const confirmDelete = () => {
-    if (!deleting.value) return;
+    if (!deleting.value) {
+return;
+}
 
     router.delete(route('admin.blogs.destroy', deleting.value.id), {
         onSuccess: () => {
@@ -197,6 +205,7 @@ const cancelDelete = () => {
 // Get status color and icon
 const getStatusInfo = (status: string) => {
     const option = statusOptions.find(opt => opt.value === status);
+
     return {
         color: option?.color || 'bg-gray-100 text-gray-800',
         icon: option?.icon || '📄'
@@ -205,7 +214,10 @@ const getStatusInfo = (status: string) => {
 
 // Format date
 const formatDate = (date: string | null) => {
-    if (!date) return 'Not published';
+    if (!date) {
+return 'Not published';
+}
+
     return new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -215,9 +227,18 @@ const formatDate = (date: string | null) => {
 
 // Get featured image URL
 const getImageUrl = (path: string | null) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
+    if (path.startsWith('/storage')) {
+return path;
+}
+
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
 </script>

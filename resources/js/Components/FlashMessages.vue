@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { computed, ref, watch } from 'vue';
 import type { PageProps } from '@/types';
 
 type Variant = 'success' | 'error';

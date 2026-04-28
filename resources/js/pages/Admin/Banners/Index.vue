@@ -1,12 +1,4 @@
 <script setup lang="ts">
-import type { Form } from '@inertiajs/vue3';
-import { Head, useForm, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
-import SectionCard from '@/Components/SectionCard.vue';
-import Modal from '@/Components/Modal.vue';
-import BannerFormFields from '@/Components/Admin/Forms/BannerFormFields.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { 
     PlusIcon, 
     PencilIcon, 
@@ -14,6 +6,14 @@ import {
     XMarkIcon,
     PhotoIcon
 } from '@heroicons/vue/24/outline';
+import type { Form } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import BannerFormFields from '@/Components/Admin/Forms/BannerFormFields.vue';
+import LoadingButton from '@/Components/LoadingButton.vue';
+import Modal from '@/Components/Modal.vue';
+import SectionCard from '@/Components/SectionCard.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 interface CreateBannerFormData {
     title: string;
@@ -119,6 +119,7 @@ const submitCreate = () => {
     if (typeof createForm.image_path === 'string') {
         createForm.image_path = undefined;
     }
+
     createForm.post(route('admin.banners.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -157,12 +158,15 @@ const closeEdit = () => {
 
 // Submit update
 const submitUpdate = () => {
-    if (!editing.value) return;
+    if (!editing.value) {
+return;
+}
 
     // Clean image_path before submit if string (existing)
     if (typeof editForm.image_path === 'string') {
         editForm.image_path = undefined;
     }
+
     editForm.put(route('admin.banners.update', editing.value.id), {
         method: 'patch',
         forceFormData: true,
@@ -185,7 +189,9 @@ const openDelete = (banner: Banner) => {
 
 // Confirm delete
 const confirmDelete = () => {
-    if (!deleting.value) return;
+    if (!deleting.value) {
+return;
+}
 
     router.delete(route('admin.banners.destroy', deleting.value.id), {
         onSuccess: () => {
@@ -208,15 +214,25 @@ const cancelDelete = () => {
 
 // Get image URL
 const getImageUrl = (path: string): string | undefined => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
+    if (path.startsWith('/storage')) {
+return path;
+}
+
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
 
 // Get status info
 const getStatusInfo = (status: string) => {
     const option = statusOptions.find(opt => opt.value === status);
+
     return {
         color: option?.color || 'bg-gray-100 text-gray-800',
         icon: option?.icon || '📄'

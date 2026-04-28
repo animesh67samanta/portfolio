@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import FormField from '@/Components/FormField.vue';
-import ImageUploader from '@/Components/Admin/ImageUploader.vue';
-import { computed } from 'vue';
 import { 
     CodeBracketIcon, 
     ArrowTrendingUpIcon, 
@@ -9,6 +6,9 @@ import {
     AdjustmentsHorizontalIcon,
     PhotoIcon
 } from '@heroicons/vue/24/outline';
+import { computed } from 'vue';
+import ImageUploader from '@/Components/Admin/ImageUploader.vue';
+import FormField from '@/Components/FormField.vue';
 
 const props = defineProps<{
     form: any;
@@ -17,9 +17,18 @@ const props = defineProps<{
 }>();
 
 const getImageUrl = (path: string | null) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
+    if (path.startsWith('/storage')) {
+return path;
+}
+
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
 
@@ -34,6 +43,7 @@ const generateSlug = (name: string) => {
 // Watch for name changes to auto-generate slug (only if slug is empty)
 const onNameInput = (event: Event) => {
     const name = (event.target as HTMLInputElement).value;
+
     if (!props.form.slug || props.form.slug === generateSlug(props.form.name)) {
         props.form.slug = generateSlug(name);
     }
@@ -41,9 +51,19 @@ const onNameInput = (event: Event) => {
 
 const proficiencyColor = computed(() => {
     const value = props.form.proficiency || 0;
-    if (value >= 80) return 'bg-green-500';
-    if (value >= 60) return 'bg-blue-500';
-    if (value >= 40) return 'bg-yellow-500';
+
+    if (value >= 80) {
+return 'bg-green-500';
+}
+
+    if (value >= 60) {
+return 'bg-blue-500';
+}
+
+    if (value >= 40) {
+return 'bg-yellow-500';
+}
+
     return 'bg-gray-500';
 });
 </script>

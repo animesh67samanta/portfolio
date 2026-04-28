@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import FormField from '@/Components/FormField.vue';
-import ImageUploader from '@/Components/Admin/ImageUploader.vue';
 import { UserIcon, MapPinIcon, BriefcaseIcon, AcademicCapIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline';
+import ImageUploader from '@/Components/Admin/ImageUploader.vue';
+import FormField from '@/Components/FormField.vue';
 
 interface Props {
   form: any;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3';
 import { EyeIcon, EyeSlashIcon, UserIcon, EnvelopeIcon, KeyIcon } from '@heroicons/vue/24/outline';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 
 const form = useForm({
     name: '',

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { KeyIcon, LockClosedIcon, ShieldCheckIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { KeyIcon, LockClosedIcon, ShieldCheckIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 const currentPasswordInput = ref<HTMLInputElement | null>(null);
@@ -27,6 +27,7 @@ const updatePassword = () => {
                 form.reset('password', 'password_confirmation');
                 passwordInput.value?.focus();
             }
+
             if (form.errors.current_password) {
                 form.reset('current_password');
                 currentPasswordInput.value?.focus();
@@ -37,13 +38,28 @@ const updatePassword = () => {
 
 const getPasswordStrength = () => {
     const password = form.password;
-    if (!password) return { level: 0, text: 'Too Short', color: 'bg-gray-400', message: '' };
+
+    if (!password) {
+return { level: 0, text: 'Too Short', color: 'bg-gray-400', message: '' };
+}
     
     let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+    if (password.length >= 8) {
+strength++;
+}
+
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+strength++;
+}
+
+    if (/\d/.test(password)) {
+strength++;
+}
+
+    if (/[^a-zA-Z0-9]/.test(password)) {
+strength++;
+}
     
     const levels: Array<{ text: string; color: string; message?: string }> = [
         { text: 'Very Weak', color: 'bg-red-500', message: 'Use a longer password' },
@@ -54,6 +70,7 @@ const getPasswordStrength = () => {
     ];
     
     const strengthInfo = levels[strength] || levels[0];
+
     return { 
         level: strength, 
         text: strengthInfo.text, 

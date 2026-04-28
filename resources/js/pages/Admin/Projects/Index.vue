@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
-import DataTable from '@/Components/Admin/DataTable.vue';
 import { PlusIcon } from '@heroicons/vue/24/outline';
+import { Head, Link, router } from '@inertiajs/vue3';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 interface Project {
   id: number;

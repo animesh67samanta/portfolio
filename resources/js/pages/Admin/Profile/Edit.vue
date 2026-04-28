@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { UserCircleIcon, KeyIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { Head } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
-import { UserCircleIcon, KeyIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
     mustVerifyEmail?: boolean;

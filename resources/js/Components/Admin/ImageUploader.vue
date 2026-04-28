@@ -17,6 +17,7 @@ const dragOver = ref(false)
 
 const handleFile = (file: File) => {
   emit('update:modelValue', file)
+
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -32,6 +33,7 @@ const handleDrop = (e: DragEvent) => {
   e.preventDefault()
   dragOver.value = false
   const file = e.dataTransfer?.files[0]
+
   if (file?.type.startsWith('image/')) {
     handleFile(file)
   }
@@ -44,6 +46,7 @@ const handleDragOver = (e: DragEvent) => {
 
 watch(() => props.modelValue, (value) => {
   console.log('ImageUploader modelValue changed:', value, typeof value, value instanceof File);
+
   if (typeof value === 'string' && value) {
     preview.value = value.startsWith('http') ? value : `/${value}`
   } else if (value instanceof File) {

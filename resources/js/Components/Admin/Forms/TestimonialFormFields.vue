@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import FormField from '@/Components/FormField.vue';
-import { ref } from 'vue';
 import { StarIcon } from '@heroicons/vue/24/outline';
+import { ref } from 'vue';
+import FormField from '@/Components/FormField.vue';
 import ImageUploader from '../ImageUploader.vue';
 
 const props = defineProps<{
@@ -20,14 +20,19 @@ const setRating = (value: number) => {
 
 const getStarClass = (index: number, rating: number | null, hover: number | null) => {
     const value = hover !== null ? hover : rating;
+
     if (value !== null && index <= value) {
         return 'text-yellow-400';
     }
+
     return 'text-gray-300';
 };
 
 const getRatingText = (rating: number | null) => {
-    if (!rating) return '';
+    if (!rating) {
+return '';
+}
+
     const texts: Record<number, string> = {
         1: 'Very Poor',
         2: 'Poor',
@@ -35,6 +40,7 @@ const getRatingText = (rating: number | null) => {
         4: 'Good',
         5: 'Excellent'
     };
+
     return texts[rating];
 };
 </script>

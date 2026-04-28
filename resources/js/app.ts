@@ -1,18 +1,23 @@
 import '../css/app.css';
-
-import { createInertiaApp } from '@inertiajs/vue3';
-import { createApp, DefineComponent, h } from 'vue';
+import { createInertiaApp, router } from '@inertiajs/vue3';
+import type { DefineComponent} from 'vue';
+import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { Ziggy } from './ziggy';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Hub Portfolio';
+const appName = import.meta.env.VITE_APP_NAME || 'HUB Portfolio';
 
 const pages = import.meta.glob<DefineComponent>('./Pages/**/*.vue');
 const pagesLowercase = import.meta.glob<DefineComponent>('./pages/**/*.vue');
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
-    // title: (title) => `${title}  ${appName}`,
+    title: (title) => {
+        if (!title || title.includes(appName)) {
+            return title || appName;
+        }
+
+        return `${title} - ${appName}`;
+    },
 
     resolve: (name) => {
         const page =
@@ -36,6 +41,14 @@ createInertiaApp({
 
         if (typeof window !== 'undefined') {
             vueApp.mount(el);
+
+            router.on('navigate', (event) => {
+                (window as any).dataLayer = (window as any).dataLayer || [];
+                (window as any).dataLayer.push({
+                    event: 'pageview',
+                    page: event.detail.page.url
+                });
+            });
         }
 
         return vueApp;

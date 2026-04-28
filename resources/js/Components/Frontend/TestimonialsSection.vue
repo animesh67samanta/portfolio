@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { ChatBubbleLeftRightIcon } from '@heroicons/vue/24/outline'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 
 type Testimonial = {
     id: number;
@@ -28,19 +28,31 @@ const totalPages = computed(() =>
 const startIndex = computed(() => currentIndex.value * itemsPerPage)
 
 const nextSlide = () => {
-    if (props.testimonials.length <= itemsPerPage) return
+    if (props.testimonials.length <= itemsPerPage) {
+return
+}
+
     currentIndex.value = (currentIndex.value + 1) % totalPages.value
 }
 
 const prevSlide = () => {
-    if (props.testimonials.length <= itemsPerPage) return
+    if (props.testimonials.length <= itemsPerPage) {
+return
+}
+
     currentIndex.value =
         (currentIndex.value - 1 + totalPages.value) % totalPages.value
 }
 
 const imageUrl = (path?: string | null) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
     return `/${path}`;
 };
 

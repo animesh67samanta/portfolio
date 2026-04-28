@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { PhotoIcon, DocumentArrowUpIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon } from '@heroicons/vue/24/outline';
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
-import { PhotoIcon, DocumentArrowUpIcon } from '@heroicons/vue/24/outline';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import FormField from '@/Components/FormField.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import SectionCard from '@/Components/SectionCard.vue';
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 type Skill = {
     id: number;

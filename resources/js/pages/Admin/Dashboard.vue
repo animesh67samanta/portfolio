@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
-import SectionCard from '@/Components/SectionCard.vue';
 import {
   ChartBarIcon,
   DocumentTextIcon,
@@ -18,6 +14,10 @@ import {
   ClockIcon,
   ExclamationCircleIcon
 } from '@heroicons/vue/24/outline';
+import { Head, router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import SectionCard from '@/Components/SectionCard.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 interface Stats {
   projects: number;
@@ -110,6 +110,7 @@ const getStatusColor = (status: string) => {
     inactive: 'bg-gray-100 text-gray-800',
     pending: 'bg-yellow-100 text-yellow-800',
   };
+
   return colors[status] || 'bg-gray-100 text-gray-800';
 };
 
@@ -122,6 +123,7 @@ const getStatusIcon = (status: string) => {
     inactive: ClockIcon,
     pending: ClockIcon,
   };
+
   return icons[status] || ClockIcon;
 };
 
@@ -131,15 +133,28 @@ const formatDate = (dateString: string) => {
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 1) {
+return 'Yesterday';
+}
+
+  if (diffDays < 7) {
+return `${diffDays} days ago`;
+}
+
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const getGreeting = () => {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
+
+  if (hour < 12) {
+return 'Good morning';
+}
+
+  if (hour < 18) {
+return 'Good afternoon';
+}
+
   return 'Good evening';
 };
 </script>

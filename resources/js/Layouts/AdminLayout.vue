@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { Link, router, usePage } from '@inertiajs/vue3';
-import type { PageProps } from '@/types';
-import FlashMessages from '@/Components/FlashMessages.vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import ApplicationIcon from '@/Components/ApplicationIcon.vue';
 import {
     ChartBarIcon,
     PhotoIcon,
@@ -23,6 +17,12 @@ import {
     ChevronDownIcon,
     Squares2X2Icon
 } from '@heroicons/vue/24/outline';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import ApplicationIcon from '@/Components/ApplicationIcon.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import FlashMessages from '@/Components/FlashMessages.vue';
+import type { PageProps } from '@/types';
 
 interface Props {
     pageTitle?: string;
@@ -73,6 +73,7 @@ const resolveHref = (routeName: string): string => {
     if (typeof route !== 'undefined' && route().has(routeName)) {
         return route(routeName);
     }
+
     return '#';
 };
 
@@ -80,6 +81,7 @@ const isActiveRoute = (routeName: string): boolean => {
     if (typeof route === 'undefined') {
         return false;
     }
+
     return route().current(routeName);
 };
 

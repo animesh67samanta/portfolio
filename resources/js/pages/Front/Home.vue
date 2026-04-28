@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import AboutSection from '@/Components/Frontend/AboutSection.vue';
-import BlogSection from '@/Components/Frontend/BlogSection.vue';
-import ContactCtaSection from '@/Components/Frontend/ContactCtaSection.vue';
+import SeoHead from '@/Components/SeoHead.vue';
 import HeroSection from '@/Components/Frontend/HeroSection.vue';
-import ProjectsSection from '@/Components/Frontend/ProjectsSection.vue';
-import SkillsSection from '@/Components/Frontend/SkillsSection.vue';
-import TestimonialsSection from '@/Components/Frontend/TestimonialsSection.vue';
-import ExperienceSection from '@/Components/Frontend/ExperienceSection.vue';
+import AboutSection from '@/Components/Frontend/AboutSection.vue';
 import EducationSection from '@/Components/Frontend/EducationSection.vue';
+import ExperienceSection from '@/Components/Frontend/ExperienceSection.vue';
+import SkillsSection from '@/Components/Frontend/SkillsSection.vue';
+import ProjectsSection from '@/Components/Frontend/ProjectsSection.vue';
+import BlogSection from '@/Components/Frontend/BlogSection.vue';
+import TestimonialsSection from '@/Components/Frontend/TestimonialsSection.vue';
+import ContactCtaSection from '@/Components/Frontend/ContactCtaSection.vue';
 import FrontLayout from '@/Layouts/FrontLayout.vue';
 
 type Banner = {
@@ -119,8 +119,17 @@ const skills = computed(() => toArray(props.skills));
 const featuredProjects = computed(() => toArray(props.featured_projects));
 const testimonials = computed(() => toArray(props.testimonials));
 const recentBlogs = computed(() => toArray(props.recent_blogs));
-const experiences = computed(() => toArray(props.experiences));
-const educations = computed(() => toArray(props.educations));
+
+const isExperienceEmpty = (exp: Experience): boolean => {
+    return !exp.title && !exp.company && !exp.duration && !exp.description && !exp.company_url && !exp.location;
+};
+
+const isEducationEmpty = (edu: Education): boolean => {
+    return !edu.degree && !edu.institution && !edu.year && !edu.description;
+};
+
+const experiences = computed(() => toArray(props.experiences).filter((exp) => !isExperienceEmpty(exp)));
+const educations = computed(() => toArray(props.educations).filter((edu) => !isEducationEmpty(edu)));
 const imageUrl = (path?: string | null): string => {
     if (!path) {
         return '/uploads/No_Image_Available.jpg';
@@ -158,7 +167,14 @@ const formatDate = (date: string | null): string => {
 </script>
 
 <template>
-    <Head title="Animesh Samanta" />
+    <SeoHead
+        :meta="{
+            title: 'Animesh Samanta',
+            description: about?.heading || 'Portfolio of Animesh Samanta — Full-stack developer, designer, and creative technologist.',
+            image: about?.photo_path || undefined,
+            type: 'website',
+        }"
+    />
 
     <FrontLayout>
         <HeroSection
@@ -189,5 +205,3 @@ const formatDate = (date: string | null): string => {
         <ContactCtaSection />
     </FrontLayout>
 </template>
-
-

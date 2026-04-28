@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import ContactFormFields from '@/Components/Admin/Forms/ContactFormFields.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import Modal from '@/Components/Modal.vue';
-import ContactFormFields from '@/Components/Admin/Forms/ContactFormFields.vue';
 import SectionCard from '@/Components/SectionCard.vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Head, Link, router } from '@inertiajs/vue3'
 import { 
   PencilIcon, 
   TrashIcon, 
@@ -9,6 +7,8 @@ import {
   ArrowPathIcon,
   DocumentMagnifyingGlassIcon 
 } from '@heroicons/vue/24/outline'
+import { Head, Link, router } from '@inertiajs/vue3'
+import { computed, ref } from 'vue'
 
 interface Column {
   key: string
@@ -82,12 +82,16 @@ const confirmDelete = () => {
     // Or directly call router if no emit
     // router.delete(route(`admin.${props.routeName}.destroy`, itemToDelete.value))
   }
+
   isDeleteModalOpen.value = false
   itemToDelete.value = null
 }
 
 const bulkDelete = () => {
-  if (selectedItems.value.length === 0) return
+  if (selectedItems.value.length === 0) {
+return
+}
+
   if (confirm(`Delete ${selectedItems.value.length} selected items?`)) {
     // Implement bulk delete logic
     selectedItems.value = []
@@ -101,11 +105,15 @@ const sort = (column: string) => {
     sortColumn.value = column
     sortDirection.value = 'asc'
   }
+
   emit('sort', sortColumn.value, sortDirection.value)
 }
 
 const getSortIcon = (column: string) => {
-  if (sortColumn.value !== column) return null
+  if (sortColumn.value !== column) {
+return null
+}
+
   return sortDirection.value === 'asc' ? ChevronUpIcon : ChevronDownIcon
 }
 
@@ -113,12 +121,15 @@ const formatValue = (item: any, column: Column) => {
   if (column.format) {
     return column.format(item[column.key])
   }
+
   if (typeof item[column.key] === 'boolean') {
     return item[column.key] ? 'Yes' : 'No'
   }
+
   if (item[column.key] === null || item[column.key] === undefined) {
     return '-'
   }
+
   return item[column.key]
 }
 
@@ -139,6 +150,7 @@ const getStatusColor = (status: string) => {
     inactive: 'bg-red-100 text-red-800',
     pending: 'bg-yellow-100 text-yellow-800'
   }
+
   return colors[status.toLowerCase()] || 'bg-gray-100 text-gray-800'
 }
 </script>

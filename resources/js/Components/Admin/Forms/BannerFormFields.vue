@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import FormField from '@/Components/FormField.vue';
-import ImageUploader from '../ImageUploader.vue';
-import { ref, computed, watch } from 'vue';
 import { 
     PhotoIcon, 
     CalendarIcon, 
@@ -10,6 +7,9 @@ import {
     EyeIcon,
     DocumentTextIcon
 } from '@heroicons/vue/24/outline';
+import { ref, computed, watch } from 'vue';
+import FormField from '@/Components/FormField.vue';
+import ImageUploader from '../ImageUploader.vue';
 
 const props = defineProps<{
     form: any;
@@ -30,6 +30,7 @@ const getStatusColor = (status: string) => {
         published: 'border-green-500 bg-green-50',
         archived: 'border-yellow-500 bg-yellow-50'
     };
+
     return colors[status] || 'border-gray-300 bg-gray-50';
 };
 

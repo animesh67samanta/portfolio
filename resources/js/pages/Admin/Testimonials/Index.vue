@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { Head, useForm, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
-import Modal from '@/Components/Modal.vue';
-import TestimonialFormFields from '@/Components/Admin/Forms/TestimonialFormFields.vue';
-import SectionCard from '@/Components/SectionCard.vue';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { 
   PencilIcon, 
   TrashIcon, 
   PlusIcon, 
   XMarkIcon
 } from '@heroicons/vue/24/outline';
+import { Head, useForm, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import TestimonialFormFields from '@/Components/Admin/Forms/TestimonialFormFields.vue';
+import LoadingButton from '@/Components/LoadingButton.vue';
+import Modal from '@/Components/Modal.vue';
+import SectionCard from '@/Components/SectionCard.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 type Testimonial = {
     id: number;
@@ -144,7 +144,10 @@ const closeEdit = () => {
 
 // Update testimonial
 const submitUpdate = () => {
-    if (!editing.value) return;
+    if (!editing.value) {
+return;
+}
+
     // Clean image fields before submit if string (existing)
   // Clean string paths - backend handles null for no change
     if (typeof editForm.avatar_path === 'string') {
@@ -173,7 +176,9 @@ const openDelete = (testimonial: Testimonial) => {
 
 // Confirm delete
 const confirmDelete = () => {
-    if (!deleting.value) return;
+    if (!deleting.value) {
+return;
+}
 
     router.delete(route('admin.testimonials.destroy', deleting.value.id), {
         onSuccess: () => {
@@ -200,9 +205,18 @@ const getStatusColor = (status: string) => {
 
 // Get avatar URL
 const getAvatarUrl = (path: string | null | undefined) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
-    if (path.startsWith('/storage')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
+    if (path.startsWith('/storage')) {
+return path;
+}
+
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { ref, watch } from 'vue';
 
 const props = withDefaults(
     defineProps<{
@@ -22,6 +22,7 @@ const isOpen = ref(props.show);
 
 watch(() => props.show, (newVal) => {
     isOpen.value = newVal;
+
     if (newVal) {
         document.body.style.overflow = 'hidden';
     } else {

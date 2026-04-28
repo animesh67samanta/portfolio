@@ -10,15 +10,27 @@ defineProps<{
     skills: Skill[];
 }>();
 const imageUrl = (path?: string | null) => {
-    if (!path) return '/uploads/No_Image_Available.jpg';
-    if (path.startsWith('http')) return path;
+    if (!path) {
+return '/uploads/No_Image_Available.jpg';
+}
+
+    if (path.startsWith('http')) {
+return path;
+}
+
     return `/${path}`;
 };
 const getColor = (value: number | null) => {
     const v = value ?? 0;
 
-    if (v >= 80) return '#22c55e';   // green
-    if (v >= 50) return '#f59e0b';   // yellow
+    if (v >= 80) {
+return '#22c55e';
+}   // green
+
+    if (v >= 50) {
+return '#f59e0b';
+}   // yellow
+
     return '#ef4444';                // red
 };
 </script>

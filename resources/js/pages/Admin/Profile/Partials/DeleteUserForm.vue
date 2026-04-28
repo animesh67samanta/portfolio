@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { ExclamationTriangleIcon, KeyIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { useForm } from '@inertiajs/vue3';
+import { nextTick, ref } from 'vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
-import { ExclamationTriangleIcon, KeyIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref<HTMLInputElement | null>(null);
