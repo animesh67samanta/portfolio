@@ -47,6 +47,8 @@ class SkillService
         }
 
         $skill->update($data);
+        $skill->save();
+
 
         return $skill;
     }

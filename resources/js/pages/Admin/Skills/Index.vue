@@ -8,7 +8,7 @@ import {
 } from '@heroicons/vue/24/outline';
 import type { Form } from '@inertiajs/vue3';
 import { Head, useForm, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import SkillFormFields from '@/Components/Admin/Forms/SkillFormFields.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
 import Modal from '@/Components/Modal.vue';
@@ -34,10 +34,16 @@ type Skill = {
     sort_order: number;
 };
 
+type PaginatedSkills = {
+    data: Skill[];
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+    prev_page_url: string | null;
+};
+
 const props = defineProps<{
-    skills: {
-        data: Skill[];
-    };
+    skills: PaginatedSkills;
 }>();
 
 const statusOptions = [
@@ -85,6 +91,75 @@ const showNotification = (type: 'success' | 'error', message: string) => {
         notification.value.show = false;
     }, 3000);
 };
+
+// Infinite Scroll State
+const allSkills = ref<Skill[]>([...props.skills.data]);
+const currentPage = ref(props.skills.current_page);
+const hasMore = ref(props.skills.current_page < props.skills.last_page);
+const isLoadingMore = ref(false);
+const sentinelRef = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
+
+// Load more skills
+const loadMore = () => {
+    if (isLoadingMore.value || !hasMore.value) {
+        return;
+    }
+
+    isLoadingMore.value = true;
+    const nextPage = currentPage.value + 1;
+
+    router.get(
+        route('admin.skills.index'),
+        { page: nextPage },
+        {
+            only: ['skills'],
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                const newSkills = (page.props.skills as PaginatedSkills);
+                if (newSkills.data.length > 0) {
+                    allSkills.value.push(...newSkills.data);
+                }
+                currentPage.value = newSkills.current_page;
+                hasMore.value = newSkills.current_page < newSkills.last_page;
+                isLoadingMore.value = false;
+            },
+            onError: () => {
+                isLoadingMore.value = false;
+            },
+        }
+    );
+};
+
+// Setup IntersectionObserver
+onMounted(() => {
+    nextTick(() => {
+        if (sentinelRef.value && hasMore.value) {
+            observer = new IntersectionObserver(
+                (entries) => {
+                    const [entry] = entries;
+                    if (entry.isIntersecting) {
+                        loadMore();
+                    }
+                },
+                {
+                    rootMargin: '200px',
+                    threshold: 0,
+                }
+            );
+            observer.observe(sentinelRef.value);
+        }
+    });
+});
+
+onUnmounted(() => {
+    if (observer && sentinelRef.value) {
+        observer.unobserve(sentinelRef.value);
+        observer.disconnect();
+        observer = null;
+    }
+});
 
 // Open create modal
 const openCreate = () => {
@@ -266,7 +341,7 @@ return 'bg-yellow-500';
             <SectionCard>
                 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <div
-                        v-for="skill in props.skills.data"
+                        v-for="skill in allSkills"
                         :key="skill.id"
                         class="group rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
                     >
@@ -336,7 +411,7 @@ return 'bg-yellow-500';
                     </div>
 
                     <!-- Empty State -->
-                    <div v-if="props.skills.data.length === 0" class="col-span-full">
+                    <div v-if="allSkills.length === 0" class="col-span-full">
                         <div class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
                             <CodeBracketIcon class="h-16 w-16 text-gray-400" />
                             <h3 class="mt-4 text-lg font-semibold text-gray-900">No skills yet</h3>
@@ -357,6 +432,20 @@ return 'bg-yellow-500';
                                 
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Sentinel & Loading Indicator -->
+                <div ref="sentinelRef" class="py-6 flex items-center justify-center">
+                    <div v-if="isLoadingMore" class="flex items-center gap-2 text-sm text-gray-500">
+                        <svg class="h-5 w-5 animate-spin text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Loading more skills…</span>
+                    </div>
+                    <div v-else-if="!hasMore && allSkills.length > 0" class="text-xs text-gray-400">
+                        — End of list —
                     </div>
                 </div>
             </SectionCard>

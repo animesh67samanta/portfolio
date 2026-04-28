@@ -24,7 +24,7 @@ class PortfolioService
         return Cache::remember('portfolio_home_data', 3600, function () {
             return [
                 'banners' => Banner::published()
-                    ->orderBy('sort_order')
+                    ->orderBy('sort_order', 'asc')
                     ->limit(5)
                     ->get([
                         'id',
@@ -53,7 +53,7 @@ class PortfolioService
                 'experiences' => About::published()->first()?->experiences ?? [],
                 'educations' => About::published()->first()?->educations ?? [],
                 'skills' => Skill::published()
-                    ->orderBy('name')
+                    ->orderBy('sort_order', 'asc')
                     ->limit(12)
                     ->get([
                         'id',
@@ -65,7 +65,7 @@ class PortfolioService
                     ->all(),
                 'testimonials' => Testimonial::published()
                     ->latest()
-                    ->limit(8)
+                    ->limit(9)
                     ->get([
                         'id',
                         'client_name',
