@@ -152,9 +152,10 @@ return;
         editForm.image_path = undefined;
     }
 
-    editForm.put(route('admin.banners.update', editing.value.id), {
-        method: 'patch',
+    editForm.patch(route('admin.banners.update', editing.value.id), {
         forceFormData: true,
+        preserveState: false,
+        preserveScroll: true,
         onSuccess: () => {
             closeEdit();
         },

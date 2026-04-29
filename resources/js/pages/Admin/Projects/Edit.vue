@@ -84,7 +84,7 @@ watch(() => form.thumbnail_path, (newFile) => {
 });
 
 const submit = () => {
-    form.put(route('admin.projects.update', props.project.id), {
+    form.patch(route('admin.projects.update', props.project.id), {
         forceFormData: true,
     });
 };

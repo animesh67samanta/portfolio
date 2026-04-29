@@ -216,7 +216,7 @@ return;
         editForm.icon = undefined;
     }
 
-    editForm.put(route('admin.skills.update', editing.value.id), {
+    editForm.patch(route('admin.skills.update', editing.value.id), {
         forceFormData: true,
         preserveState: false,
         preserveScroll: true,

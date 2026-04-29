@@ -140,9 +140,10 @@ return;
     }
 
 
-    editForm.put(route('admin.testimonials.update', editing.value.id), {
-        // method: 'patch',
+    editForm.patch(route('admin.testimonials.update', editing.value.id), {
         forceFormData: true,
+        preserveState: false,
+        preserveScroll: true,
         onSuccess: () => {
             closeEdit();
         },
