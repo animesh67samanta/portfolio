@@ -86,18 +86,18 @@ const isDeleteOpen = ref(false);
 const deleting = ref<Banner | null>(null);
 
 // Notification
-const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
-    show: false,
-    type: 'success',
-    message: ''
-});
+// const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
+//     show: false,
+//     type: 'success',
+//     message: ''
+// });
 
-const showNotification = (type: 'success' | 'error', message: string) => {
-    notification.value = { show: true, type, message };
-    setTimeout(() => {
-        notification.value.show = false;
-    }, 3000);
-};
+// const showNotification = (type: 'success' | 'error', message: string) => {
+//     notification.value = { show: true, type, message };
+//     setTimeout(() => {
+//         notification.value.show = false;
+//     }, 3000);
+// };
 
 // Open create modal
 const openCreate = () => {
@@ -124,11 +124,11 @@ const submitCreate = () => {
         forceFormData: true,
         onSuccess: () => {
             closeCreate();
-            showNotification('success', 'Banner created successfully!');
+            // showNotification('success', 'Banner created successfully!');
         },
         onError: (errors) => {
             console.error('Create errors:', errors);
-            showNotification('error', 'Failed to create banner. Please check the form.');
+            // showNotification('error', 'Failed to create banner. Please check the form.');
         }
     });
 };
@@ -172,11 +172,11 @@ return;
         forceFormData: true,
         onSuccess: () => {
             closeEdit();
-            showNotification('success', 'Banner updated successfully!');
+            // showNotification('success', 'Banner updated successfully!');
         },
         onError: (errors) => {
             console.error('Update errors:', errors);
-            showNotification('error', 'Failed to update banner.');
+            // showNotification('error', 'Failed to update banner.');
         }
     });
 };
@@ -197,11 +197,11 @@ return;
         onSuccess: () => {
             isDeleteOpen.value = false;
             deleting.value = null;
-            showNotification('success', 'Banner deleted successfully!');
+            // showNotification('success', 'Banner deleted successfully!');
         },
         onError: (errors) => {
             console.error('Delete errors:', errors);
-            showNotification('error', 'Failed to delete banner.');
+            // showNotification('error', 'Failed to delete banner.');
         }
     });
 };

@@ -71,18 +71,18 @@ const isDeleteOpen = ref(false);
 const deleting = ref<Testimonial | null>(null);
 
 // Success/Error notifications
-const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
-    show: false,
-    type: 'success',
-    message: ''
-});
+// const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
+//     show: false,
+//     type: 'success',
+//     message: ''
+// });
 
-const showNotification = (type: 'success' | 'error', message: string) => {
-    notification.value = { show: true, type, message };
-    setTimeout(() => {
-        notification.value.show = false;
-    }, 3000);
-};
+// const showNotification = (type: 'success' | 'error', message: string) => {
+//     notification.value = { show: true, type, message };
+//     setTimeout(() => {
+//         notification.value.show = false;
+//     }, 3000);
+// };
 
 // Open create modal
 const openCreate = () => {
@@ -109,10 +109,11 @@ const submitCreate = () => {
         forceFormData: true,
         onSuccess: () => {
             closeCreate();
-            showNotification('success', 'Testimonial created successfully!');
+            // showNotification('success', 'Testimonial created successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to create testimonial. Please check the form.');
+        onError: (errors) => {
+            console.error('Create errors:', errors);
+            // showNotification('error', 'Failed to create testimonial. Please check the form.');
         }
     });
 };
@@ -156,14 +157,15 @@ return;
 
 
     editForm.put(route('admin.testimonials.update', editing.value.id), {
-        method: 'patch',
+        // method: 'patch',
         forceFormData: true,
         onSuccess: () => {
             closeEdit();
-            showNotification('success', 'Testimonial updated successfully!');
+            // showNotification('success', 'Testimonial updated successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to update testimonial.');
+        onError: (errors) => {
+            console.error('Update errors:', errors);
+            // showNotification('error', 'Failed to update testimonial.');
         }
     });
 };
@@ -184,10 +186,11 @@ return;
         onSuccess: () => {
             isDeleteOpen.value = false;
             deleting.value = null;
-            showNotification('success', 'Testimonial deleted successfully!');
+            // showNotification('success', 'Testimonial deleted successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to delete testimonial.');
+        onError: (errors) => {
+            console.error('Delete errors:', errors);
+            // showNotification('error', 'Failed to delete testimonial.');
         }
     });
 };

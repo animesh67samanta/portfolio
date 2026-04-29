@@ -52,8 +52,7 @@ const generateSlug = (text: string) => {
 // Watch for name changes to auto-generate slug
 watch(() => props.form.name, (newName) => {
     if (newName) {
-        // Only auto-generate if slug is empty OR slug matches the previous name's slug
-        if (!props.form.slug || props.form.slug === generateSlug(props.form.name)) {
+        if (!props.form.slug || props.form.slug === generateSlug(newName)) {
             props.form.slug = generateSlug(newName);
         }
     }
@@ -108,7 +107,6 @@ const proficiencyColor = computed(() => {
                                 placeholder="e.g., Laravel, React, Python"
                                 class="input-field transition-all duration-200 focus:ring-2 focus:ring-indigo-500"
                                 autocomplete="off"
-                                @input="onSlugInput($event)"
                             />
                         </FormField>
 

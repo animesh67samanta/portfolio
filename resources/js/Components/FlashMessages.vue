@@ -14,25 +14,27 @@ const flashSuccess = computed(() => page.props.flash?.success ?? null);
 const flashError = computed(() => page.props.flash?.error ?? null);
 
 watch(
-    [flashSuccess, flashError],
-    ([success, error]) => {
-        if (success) {
+    () => page.props.flash,
+    (flash) => {
+        if (!flash) return;
+
+        if (flash.success) {
             variant.value = 'success';
-            message.value = success;
+            message.value = flash.success;
             isVisible.value = true;
-        } else if (error) {
+        } else if (flash.error) {
             variant.value = 'error';
-            message.value = error;
+            message.value = flash.error;
             isVisible.value = true;
         }
 
-        if (success || error) {
-            window.setTimeout(() => {
+        if (flash.success || flash.error) {
+            setTimeout(() => {
                 isVisible.value = false;
             }, 4000);
         }
     },
-    { immediate: true },
+    { immediate: true, deep: true }
 );
 
 const styles = computed(() => {

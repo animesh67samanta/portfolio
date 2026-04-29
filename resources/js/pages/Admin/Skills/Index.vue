@@ -6,7 +6,6 @@ import {
     XMarkIcon,
     CodeBracketIcon
 } from '@heroicons/vue/24/outline';
-import type { Form } from '@inertiajs/vue3';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import SkillFormFields from '@/Components/Admin/Forms/SkillFormFields.vue';
@@ -79,18 +78,18 @@ const isDeleteOpen = ref(false);
 const deleting = ref<Skill | null>(null);
 
 // Notification
-const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
-    show: false,
-    type: 'success',
-    message: ''
-});
+// const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
+//     show: false,
+//     type: 'success',
+//     message: ''
+// });
 
-const showNotification = (type: 'success' | 'error', message: string) => {
-    notification.value = { show: true, type, message };
-    setTimeout(() => {
-        notification.value.show = false;
-    }, 3000);
-};
+// const showNotification = (type: 'success' | 'error', message: string) => {
+//     notification.value = { show: true, type, message };
+//     setTimeout(() => {
+//         notification.value.show = false;
+//     }, 3000);
+// };
 
 // Infinite Scroll State
 const allSkills = ref<Skill[]>([...props.skills.data]);
@@ -186,10 +185,11 @@ const submitCreate = () => {
         forceFormData: true,
         onSuccess: () => {
             closeCreate();
-            showNotification('success', 'Skill created successfully!');
+            // showNotification('success', 'Skill created successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to create skill. Please check the form.');
+        onError: (errors) => {
+            console.error('Create errors:', errors);
+            // showNotification('error', 'Failed to create skill. Please check the form.');
         }
     });
 };
@@ -231,10 +231,11 @@ return;
         forceFormData: true,
         onSuccess: () => {
             closeEdit();
-            showNotification('success', 'Skill updated successfully!');
+            // showNotification('success', 'Skill updated successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to update skill.');
+        onError: (errors) => {
+            console.error('Update errors:', errors);
+            // showNotification('error', 'Failed to update skill.');
         }
     });
 };
@@ -255,10 +256,11 @@ return;
         onSuccess: () => {
             isDeleteOpen.value = false;
             deleting.value = null;
-            showNotification('success', 'Skill deleted successfully!');
+            // showNotification('success', 'Skill deleted successfully!');
         },
-        onError: () => {
-            showNotification('error', 'Failed to delete skill.');
+        onError: (errors) => {
+             console.error('Delete errors:', errors);
+            // showNotification('error', 'Failed to delete skill.');
         }
     });
 };
@@ -272,16 +274,16 @@ const cancelDelete = () => {
 // Get image URL
 const getImageUrl = (path: string | null) => {
     if (!path) {
-return '/uploads/No_Image_Available.jpg';
-}
+    return '/uploads/No_Image_Available.jpg';
+    }
 
     if (path.startsWith('http')) {
-return path;
-}
+    return path;
+    }
 
     if (path.startsWith('/storage')) {
-return path;
-}
+    return path;
+    }
 
     return `/${path.replace(/^\/?storage\/?/, '')}`;
 };
