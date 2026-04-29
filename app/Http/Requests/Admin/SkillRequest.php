@@ -21,11 +21,11 @@ class SkillRequest extends FormRequest
         $skillId = $this->route('skill')?->id;
 
         return [
-            'name' => ['nullable', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', Rule::unique('skills', 'slug')->ignore($skillId)],
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('skills', 'slug')->ignore($skillId)],
             'proficiency' => ['nullable', 'integer', 'min:0', 'max:100'],
             'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4048'], // Optional: allow null/empty
-            'status' => ['nullable', 'in:active,inactive'],
+            'status' => ['required', 'in:active,inactive'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }

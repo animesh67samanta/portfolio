@@ -164,7 +164,7 @@ const closeCreate = () => {
 const submitCreate = () => {
     // Clean icon before submit if string (existing) - shouldn't happen on create
     if (typeof createForm.icon === 'string') {
-        delete editForm.icon;
+        createForm.icon = null;
     }
 
     createForm.post(route('admin.skills.store'), {
@@ -214,9 +214,10 @@ const submitUpdate = () => {
         editForm.icon = null;
     }
 
-    console.log('Form data before submit:', editForm.data());
-
-    editForm.patch(route('admin.skills.update', editing.value.id), {
+    editForm.transform((data) => ({
+        ...data,
+        _method: 'patch',
+    })).post(route('admin.skills.update', editing.value.id), {
         forceFormData: true,
         preserveState: true,
         preserveScroll: true,

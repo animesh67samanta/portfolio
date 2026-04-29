@@ -12,12 +12,12 @@ const title = `${props.status} - Page Not Founded`;
 
 const descriptions: Record<number, string> = {
     401: 'Unauthorized',
-    403: 'Forbidden',
-    404: 'Page Not Found',
+    403: 'Sorry, you are forbidden from accessing this page.',
+    404: 'Sorry, the page you are looking for could not be found.',
     419: 'Page Expired',
     429: 'Too Many Requests',
-    500: 'Server Error',
-    503: 'Service Unavailable',
+    500: 'Whoops, something went wrong on our servers.',
+    503: 'Sorry, we are doing some maintenance. Please check back soon.',
 };
 
 const description = descriptions[props.status] || 'An error occurred';
