@@ -144,7 +144,10 @@ return;
         (editForm as any).cover_image = null;
     }
 
-    editForm.patch(route('admin.blogs.update', editing.value.id), {
+    editForm.transform((data) => ({
+        ...data,
+        _method: 'patch',
+    })).post(route('admin.blogs.update', editing.value.id), {
         forceFormData: true,
         preserveState: false,
         preserveScroll: true,

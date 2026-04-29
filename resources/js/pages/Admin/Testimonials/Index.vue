@@ -140,7 +140,10 @@ return;
     }
 
 
-    editForm.patch(route('admin.testimonials.update', editing.value.id), {
+    editForm.transform((data) => ({
+        ...data,
+        _method: 'patch',
+    })).post(route('admin.testimonials.update', editing.value.id), {
         forceFormData: true,
         preserveState: false,
         preserveScroll: true,
