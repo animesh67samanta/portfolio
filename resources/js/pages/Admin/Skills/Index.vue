@@ -187,12 +187,12 @@ const submitCreate = () => {
 // Open edit modal
 const openEdit = (skill: Skill) => {
     editing.value = skill;
-    editForm.name = skill.name;
-    editForm.slug = skill.slug;
-    editForm.proficiency = skill.proficiency;
+    editForm.name = skill.name || '';
+    editForm.slug = skill.slug || '';
+    editForm.proficiency = skill.proficiency ?? null;
     editForm.icon = skill.icon;
-    editForm.status = skill.status;
-    editForm.sort_order = skill.sort_order;
+    editForm.status = skill.status || 'active';
+    editForm.sort_order = skill.sort_order ?? 0;
     editForm.clearErrors();
     isEditOpen.value = true;
 };
@@ -209,37 +209,17 @@ const closeEdit = () => {
 const submitUpdate = () => {
     if (!editing.value) return;
 
-
-    // Clean icon before submit if string (existing)
-    if (typeof editForm.icon === 'string' || editForm.icon === undefined) {
-        delete editForm.icon;
+    // Clean icon: set to null for existing strings (don't send), keep File for uploads
+    if (typeof editForm.icon === 'string') {
+        editForm.icon = null;
     }
 
-    // Clone and clean the form data
-    const cleanData = JSON.parse(JSON.stringify(editForm.data()));
-    
-    // Remove icon if it's not a File
-    if (!(cleanData.icon instanceof File)) {
-        delete cleanData.icon;
-    }
-    
-    // Remove any other undefined values
-    Object.keys(cleanData).forEach(key => {
-        if (cleanData[key] === undefined) {
-            delete cleanData[key];
-        }
-    });
-    
-    console.log('Clean data:', cleanData);
-    
+    console.log('Form data before submit:', editForm.data());
 
-    console.log('FORM DATA:', editForm.data());
     editForm.patch(route('admin.skills.update', editing.value.id), {
-        // data: cleanData,
-        forceFormData: cleanData,
-        preserveState: false,
+        forceFormData: true,
+        preserveState: true,
         preserveScroll: true,
-        
         onSuccess: (page) => {
             // Refresh the skills list from server response
             const newSkills = page.props.skills as PaginatedSkills;
