@@ -77,20 +77,6 @@ const editForm = useForm<CreateSkillFormData>({
 const isDeleteOpen = ref(false);
 const deleting = ref<Skill | null>(null);
 
-// Notification
-// const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
-//     show: false,
-//     type: 'success',
-//     message: ''
-// });
-
-// const showNotification = (type: 'success' | 'error', message: string) => {
-//     notification.value = { show: true, type, message };
-//     setTimeout(() => {
-//         notification.value.show = false;
-//     }, 3000);
-// };
-
 // Infinite Scroll State
 const allSkills = ref<Skill[]>([...props.skills.data]);
 const currentPage = ref(props.skills.current_page);
@@ -183,13 +169,17 @@ const submitCreate = () => {
 
     createForm.post(route('admin.skills.store'), {
         forceFormData: true,
-        onSuccess: () => {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (page) => {
+            const newSkills = page.props.skills as PaginatedSkills;
+            allSkills.value = [...newSkills.data];
+            currentPage.value = newSkills.current_page;
+            hasMore.value = newSkills.current_page < newSkills.last_page;
             closeCreate();
-            // showNotification('success', 'Skill created successfully!');
         },
         onError: (errors) => {
             console.error('Create errors:', errors);
-            // showNotification('error', 'Failed to create skill. Please check the form.');
         }
     });
 };
@@ -227,15 +217,19 @@ return;
     }
 
     editForm.put(route('admin.skills.update', editing.value.id), {
-        method: 'patch',
         forceFormData: true,
-        onSuccess: () => {
+        preserveState: false,
+        preserveScroll: true,
+        onSuccess: (page) => {
+            // Refresh the skills list from server response
+            const newSkills = page.props.skills as PaginatedSkills;
+            allSkills.value = [...newSkills.data];
+            currentPage.value = newSkills.current_page;
+            hasMore.value = newSkills.current_page < newSkills.last_page;
             closeEdit();
-            // showNotification('success', 'Skill updated successfully!');
         },
         onError: (errors) => {
             console.error('Update errors:', errors);
-            // showNotification('error', 'Failed to update skill.');
         }
     });
 };
@@ -253,14 +247,18 @@ return;
 }
 
     router.delete(route('admin.skills.destroy', deleting.value.id), {
-        onSuccess: () => {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: (page) => {
+            const newSkills = page.props.skills as PaginatedSkills;
+            allSkills.value = [...newSkills.data];
+            currentPage.value = newSkills.current_page;
+            hasMore.value = newSkills.current_page < newSkills.last_page;
             isDeleteOpen.value = false;
             deleting.value = null;
-            // showNotification('success', 'Skill deleted successfully!');
         },
         onError: (errors) => {
              console.error('Delete errors:', errors);
-            // showNotification('error', 'Failed to delete skill.');
         }
     });
 };

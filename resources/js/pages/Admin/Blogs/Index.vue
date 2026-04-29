@@ -71,20 +71,6 @@ const editForm = useForm({
 const isDeleteOpen = ref(false);
 const deleting = ref<Blog | null>(null);
 
-// Notification
-// const notification = ref<{ show: boolean; type: 'success' | 'error'; message: string }>({
-//     show: false,
-//     type: 'success',
-//     message: ''
-// });
-
-// const showNotification = (type: 'success' | 'error', message: string) => {
-//     notification.value = { show: true, type, message };
-//     setTimeout(() => {
-//         notification.value.show = false;
-//     }, 3000);
-// };
-
 // Open create modal
 const openCreate = () => {
     createForm.reset();
@@ -113,11 +99,9 @@ const submitCreate = () => {
         forceFormData: true,
         onSuccess: () => {
             closeCreate();
-            // showNotification('success', 'Blog created successfully!');
         },
         onError: (errors) => {
             console.error('Create errors:', errors);
-            // showNotification('error', 'Failed to create blog. Please check the form.');
         }
     });
 };
@@ -165,11 +149,9 @@ return;
         forceFormData: true,
         onSuccess: () => {
             closeEdit();
-            // showNotification('success', 'Blog updated successfully!');
         },
         onError: (errors) => {
             console.error('Update errors:', errors);
-            // showNotification('error', 'Failed to update blog.');
         }
     });
 };
@@ -190,11 +172,9 @@ return;
         onSuccess: () => {
             isDeleteOpen.value = false;
             deleting.value = null;
-            // showNotification('success', 'Blog deleted successfully!');
         },
         onError: (errors) => {
              console.error('Delete errors:', errors);
-            // showNotification('error', 'Failed to delete blog.');
         }
     });
 };
