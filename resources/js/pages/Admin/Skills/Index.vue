@@ -207,17 +207,36 @@ const closeEdit = () => {
 
 // Submit update
 const submitUpdate = () => {
-    if (!editing.value) {
-return;
-}
+    if (!editing.value) return;
+
 
     // Clean icon before submit if string (existing)
-    if (typeof editForm.icon === 'string') {
+    if (typeof editForm.icon === 'string' || editForm.icon === undefined) {
         delete editForm.icon;
     }
-console.log('FORM DATA:', editForm.data());
+
+    // Clone and clean the form data
+    const cleanData = JSON.parse(JSON.stringify(editForm.data()));
+    
+    // Remove icon if it's not a File
+    if (!(cleanData.icon instanceof File)) {
+        delete cleanData.icon;
+    }
+    
+    // Remove any other undefined values
+    Object.keys(cleanData).forEach(key => {
+        if (cleanData[key] === undefined) {
+            delete cleanData[key];
+        }
+    });
+    
+    console.log('Clean data:', cleanData);
+    
+
+    console.log('FORM DATA:', editForm.data());
     editForm.patch(route('admin.skills.update', editing.value.id), {
-        forceFormData: true,
+        // data: cleanData,
+        forceFormData: cleanData,
         preserveState: false,
         preserveScroll: true,
         
