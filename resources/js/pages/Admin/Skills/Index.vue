@@ -164,7 +164,7 @@ const closeCreate = () => {
 const submitCreate = () => {
     // Clean icon before submit if string (existing) - shouldn't happen on create
     if (typeof createForm.icon === 'string') {
-        createForm.icon = undefined;
+        delete editForm.icon;
     }
 
     createForm.post(route('admin.skills.store'), {
@@ -213,13 +213,14 @@ return;
 
     // Clean icon before submit if string (existing)
     if (typeof editForm.icon === 'string') {
-        editForm.icon = undefined;
+        delete editForm.icon;
     }
-
+console.log('FORM DATA:', editForm.data());
     editForm.patch(route('admin.skills.update', editing.value.id), {
         forceFormData: true,
         preserveState: false,
         preserveScroll: true,
+        
         onSuccess: (page) => {
             // Refresh the skills list from server response
             const newSkills = page.props.skills as PaginatedSkills;
