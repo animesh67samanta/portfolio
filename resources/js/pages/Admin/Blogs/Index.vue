@@ -275,7 +275,7 @@ return path;
                         <!-- Featured Image -->
                         <div class="relative overflow-hidden rounded-t-xl">
                             <img 
-                                :src="getImageUrl(blog.featured_image) || 'https://via.placeholder.com/400x200?text=No+Image'"
+                                :src="getImageUrl(blog.cover_image) || getImageUrl(blog.featured_image) || 'https://via.placeholder.com/400x200?text=No+Image'"
                                 :alt="blog.title"
                                 class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 @error="(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x200?text=No+Image' }"
