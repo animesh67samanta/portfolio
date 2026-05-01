@@ -11,12 +11,12 @@ defineProps<{
 }>();
 const imageUrl = (path?: string | null) => {
     if (!path) {
-return '/uploads/No_Image_Available.jpg';
-}
+        return '/uploads/No_Image_Available.jpg';
+    }
 
     if (path.startsWith('http')) {
-return path;
-}
+        return path;
+    }
 
     return `/${path}`;
 };
@@ -24,15 +24,15 @@ const getColor = (value: number | null) => {
     const v = value ?? 0;
 
     if (v >= 80) {
-return '#22c55e';
-}   // green
+    return '#22c55e';
+    }   // green
 
-    if (v >= 50) {
-return '#f59e0b';
-}   // yellow
+        if (v >= 50) {
+    return '#f59e0b';
+    }   // yellow
 
-    return '#ef4444';                // red
-};
+        return '#ef4444';                // red
+    };
 </script>
 
 <template>
@@ -41,7 +41,7 @@ return '#f59e0b';
             <p class="text-sm font-semibold uppercase tracking-widest text-indigo-500">Skills</p>
             <h2 class="mt-2 text-3xl font-bold uppercase tracking-[0.25em] text-slate-900">My Skills</h2>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto py-3">
+        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto py-3">
             <div
                 v-for="skill in skills"
                 :key="skill.id"
