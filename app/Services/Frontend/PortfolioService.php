@@ -54,7 +54,7 @@ class PortfolioService
                 'educations' => About::published()->first()?->educations ?? [],
                 'skills' => Skill::published()
                     ->orderBy('sort_order', 'asc')
-                    ->limit(12)
+                    // ->limit(12)
                     ->get([
                         'id',
                         'name',
