@@ -17,7 +17,7 @@ const props = defineProps<{
 }>();
 
 const currentSlide = ref(0);
-
+const bannerDuration = 6000;
 const fallbackBanner: Banner = {
     id: 0,
     title: 'WE DESIGN & BUILD BRANDS',
@@ -60,7 +60,7 @@ const startSlider = (): void => {
 
     sliderInterval = setInterval(() => {
         currentSlide.value = (currentSlide.value + 1) % slides.value.length;
-    }, 4000);
+    }, bannerDuration);
 };
 
 const stopSlider = (): void => {
