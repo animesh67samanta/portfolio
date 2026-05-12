@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
                                 }}
                             </a>
 
-                            <a
+                            <!-- <a
                                 v-if="resumeUrl"
                                 :href="resumeUrl"
                                 target="_blank"
@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
                                 transition duration-300"
                             >
                                 Download CV
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </transition>
