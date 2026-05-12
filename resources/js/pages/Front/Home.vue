@@ -11,7 +11,6 @@ import BlogSection from '@/Components/Frontend/BlogSection.vue';
 import TestimonialsSection from '@/Components/Frontend/TestimonialsSection.vue';
 import ContactCtaSection from '@/Components/Frontend/ContactCtaSection.vue';
 import FrontLayout from '@/Layouts/FrontLayout.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 
 type Banner = {
     id: number;
@@ -132,8 +131,11 @@ const isEducationEmpty = (edu: Education): boolean => {
 const experiences = computed(() => toArray(props.experiences).filter((exp) => !isExperienceEmpty(exp)));
 const educations = computed(() => toArray(props.educations).filter((edu) => !isEducationEmpty(edu)));
 const imageUrl = (path?: string | null): string => {
+    // In dev, use full url to Laravel server
+    const baseUrl = import.meta.env.DEV ? 'http://localhost:8000' : '';
+
     if (!path) {
-        return '/uploads/No_Image_Available.jpg';
+        return `${baseUrl}/uploads/No_Image_Available.jpg`;
     }
 
     if (path.startsWith('http')) {
@@ -145,7 +147,7 @@ const imageUrl = (path?: string | null): string => {
         .replace(/^public\//, '')
         .replace(/^storage\/public\//, 'storage/');
 
-    return `/${normalizedPath}`;
+    return `${baseUrl}/${normalizedPath}`;
 };
 
 const formatDate = (date: string | null): string => {
@@ -203,7 +205,6 @@ const formatDate = (date: string | null): string => {
         <ProjectsSection v-if="featuredProjects.length" :projects="featuredProjects" :image-url="imageUrl" />
         <TestimonialsSection v-if="testimonials.length" :testimonials="testimonials" />
         <BlogSection v-if="recentBlogs.length" :blogs="recentBlogs" :image-url="imageUrl" :format-date="formatDate" />
-        <Checkbox />
         <ContactCtaSection />
     </FrontLayout>
 </template>
